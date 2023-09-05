@@ -29,7 +29,7 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 2. rigidbody 컴포넌트 구성을 알아보자
 
 > rigidbody : gameobject를 물리엔진에서 제어하도록 만드는 컴포넌트이다.
-![rigidbodyOption](./githubImage/rigidbodyOption.png)
+![rigidbodyOption](./githubImage/rigidbodyOption.PNG)
 
 <br>
 
