@@ -1,6 +1,7 @@
 # Unity_ActionRPG
 유니티로 ActionRPG(Diable등) 게임 제작하기
-# 알게된것들 나열.
+
+## 정리
 
 움직임은 rigidbody를 사용한다. 
 
