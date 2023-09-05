@@ -31,6 +31,8 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 > rigidbody : gameobject를 물리엔진에서 제어하도록 만드는 컴포넌트이다.
 ![rigidbodyOption](./githubImage/rigidbodyOption.png)
 
+<br>
+
 - Mass : 질량이다. rigidbody끼리 충돌할때 작용하는 요소이다.
 
 - Drag : 공기저항값이다. 값이 크면 깃털과 같이 가볍게 작용해 점프등을 할때 천천히 내려옴.
