@@ -14,13 +14,12 @@ public class RigidBodyCharacter : MonoBehaviour
     public LayerMask groundLayerMask;               // raycast를 통해 땅에 닿아있는지 확인하기 위한 변수
     public float groundCheckDistance = 0.3f;
     #endregion Variables
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         isGroundedCheck();

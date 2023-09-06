@@ -15,7 +15,7 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
     1. rigidbody를 통한 움직임 [rigidbodyCharacter.cs](./ActionRPG/Assets/RigidBodyCharacter.cs)  
     
     2. characterController를 통한 움직임
-        [characterController.cs]()  
+        [characterController.cs](./ActionRPG/Assets/ControllerCharacter.cs)  
         
 보통의 게임에서는 간단한 플레이어 움직임은 물리엔진을 사용하지 않고 2번방식을 자주 사용한다.  
 여기선 공부목적도 있어 1번을 구현하되, 플레이어의 움직임은 2번으로 한다.  
@@ -131,6 +131,81 @@ AddForce 의 두번째 인자는 ForceMode이다. 여기서는 ForceMode.Velocit
 
 __CharacterController를 이용한 이동__
 
+__ CharacterController 이동,점프 및 대쉬__  
+
+설명에 앞서 사용하는 변수명 및 초기값은 아래와 같다.
+```csharp
+    #region Variables
+    public float speed = 5f;
+    public float jumpHeight = 2f;
+    public float dashDistance = 5f;
+    private CharacterController characterController;
+    private bool isGround = false;                  // 땅에 닿아있는지 확인하기 위한 변수
+    public float gravity = -9.81f;
+    public Vector3 drags;
+    private Vector3 calcVelocity;
+    #endregion Variables
+```
+
+이전 rigidbody와 다른점은 gravity 와 drags 를 직접 계산해 줘야한다는 것이다.
+이러한 것들때문에 이동 점프 대시가 조금 구현이 rigidbody와 달라진다
+
+__이동__
+``` csharp
+
+<---------- update 문 일부----------->
+      isGround = characterController.isGrounded;      // raycast가 아닌 characterController의 isGrounded를 사용한다.
+        if(isGround && calcVelocity.y < 0) // 땅에있을때 더이상 중력값의 영향을 받지 않게함
+        {
+            calcVelocity.y = 0;
+        }
+        // Process Inputs
+
+        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); 
+        characterController.Move(move * speed * Time.deltaTime); // 캐릭터 컨트롤러를 이용한 이동
+	(생략)
+        calcVelocity.y += gravity * Time.deltaTime; // 중력값을 계산한다.
+
+        calcVelocity.x /= 1 + drags.x * Time.deltaTime; // x축으로 이동할때마다 drags.x의 값만큼 속도를 줄인다.
+        calcVelocity.z /= 1 + drags.z * Time.deltaTime; // z축으로 이동할때마다 drags.z의 값만큼 속도를 줄인다
+        calcVelocity.y /= 1 + drags.y * Time.deltaTime; // y축으로 이동할때마다 drags.y의 값만큼 속도를 줄인다.
+
+        characterController.Move(calcVelocity * Time.deltaTime); // 캐릭터 컨트롤러를 이용한 이동
+ 
+```
+
+characterController.isGrounded 라는게 있긴하지만, 아무래도 정밀도가 상당히 '많이' 떨어진다. 여기서는 학습용으로 사용했지만 다시
+위 rigidbody에서 사용했던것처럼 raycast로 바꿀예정이다.  
+
+__ 점프 __  
+``` csharp
+        if(Input.GetButtonDown("Jump") && isGround)
+        {
+            calcVelocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity); // 점프공식이다. 게임마다 구현방식이 다르다.
+        }
+```
+
+간단하다. 이동부분 마지막줄에 characterController.Move를 한번 더 해주는데 여기서 대시 및 점프를 해준다.  
+
+__ 대시 __
+
+``` csharp
+        if(Input.GetButtonDown("Dash"))
+        {
+            Vector3 dashVelocity = Vector3.Scale(transform.forward,
+                dashDistance * new Vector3(Mathf.Log(1f/(Time.deltaTime * drags.x + 1 ))/ -Time.deltaTime, 
+                0,
+                (Mathf.Log(1f/(Time.deltaTime * drags.z + 1 ))/ -Time.deltaTime)
+                )
+            );
+            calcVelocity += dashVelocity;
+        }
+
+```  
+이것또한 세부 식은 rigidbody의 대시와 같기때문에 설명은 생략한다. 다른것이 있다면 , drags의 값을 public 변수로 받아서 사용한다는점,
+calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준다는 점이다. 
+
+
 ## 공부내용.
 
 1. 정적 오브젝트
@@ -175,7 +250,16 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 -Constraints : rigidbody의 움직임을 제어한다.
 
 ---
-3. Vector & transform
+
+3. Character Controller 구성에 대해서 알아보자
+![CharacterController Option](./githubImage/characterController.png)
+- Slope Limit : 캐릭터가 올라갈 수 있는 최대 경사를 의미한다.  
+- Step Offset :  올라갈 수 있는 계단의 높이  
+- Skin Width :  캐릭터 Controller 와 다른 collider가 부딛혔을때 겹칠 수 있는 값  
+- Min Move Distance :  캐릭터 이동의 최소값.  
+
+---
+4. Vector & transform
 보통 우리가 사용하는 Vector3.forward 와 transform.forward를 예시로 든다. 굳이 forward에 국한되지 않고 .up, .back등에도 쓴다.
 Vector3.forward는 new Vector(0,0,1) 이 기본이다. 이것은 Read-Only Value기 때문에 바꿀수 없다.
 transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서 물체가 바라보는 방향을 바꿔주고싶으면 
@@ -192,10 +276,13 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 즉 사용 용도가 완전히 다르다.
 
 ---
-4. Update, FixedUpdate, LateUpdate
+5. Update, FixedUpdate, LateUpdate
 ~ Update - 매 프레임마다 처리되는 작업이다. 때문에 그래픽 랜더링 속도에 따라 느려지거나 빨라지고 있어서, 원하지않은 물리적 충돌이 발생할 수 있다.
 ~ FixedUpdate - 물리엔진 위에서 동작한다. 즉 고정된 시간마다 실행하는데 이때문에 보통 이동,회전,힘에서 사용한다.
 ~ LateUpdate - Update문 호출이되고 가장 마지막에 호출되는 문이다
 
 보통 이 3가지 조합을 합쳐서 
 입력은 Update, 이동처리는 FixedUpdate, 카메라 움직임은 LateUpdate에 구현해주면 보다 부드럽게 구현 할 수 있다.
+
+---
+
