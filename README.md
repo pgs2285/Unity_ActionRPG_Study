@@ -21,7 +21,7 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
         
 보통의 게임에서는 간단한 플레이어 움직임은 물리엔진을 사용하지 않고 2번방식을 자주 사용한다.  
 1,2 번은 키보드에 적합한 방식이고 Click & Move 방식에 적당한 방법은 3번 NavMeshAgent이다.  
-우리는 디아블로같은 이동방식 구현할것이라 3번으로 한다. 결과만 보려면 __ 1-3 Character Controller 에 NavMesh 결합하기 __
+우리는 디아블로같은 이동방식 구현할것이라 3번으로 한다. 결과만 보려면 **1-3 Character Controller 에 NavMesh 결합하기**
 만 확인한다.
 
 
@@ -304,8 +304,8 @@ Update문은 다음과 같이 변경해준다.
 ```
 LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
-!(NavMeshResult)[./githubImage/navMeshResult.gif]  
 
+!(NavMeshResult)[./githubImage/navMeshResult.gif]  
 ## 공부내용.
 
 1. 정적 오브젝트
