@@ -10,6 +10,8 @@ __공부내용.__에는 내가 그동안 무심코 지나치며 적용했던 것
 
 ## 프로젝트 설명
 
+### 캐릭터 생성및 이동 대시 점프
+
 움직임은 2가지 모두 구현해 놓았다
     1. rigidbody를 통한 움직임 [rigidbodyCharacter.cs](./ActionRPG/Assets/RigidBodyCharacter.cs)
     2. characterController를 통한 움직임
