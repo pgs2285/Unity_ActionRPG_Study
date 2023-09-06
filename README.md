@@ -16,15 +16,22 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
     
     2. characterController를 통한 움직임
         [characterController.cs](./ActionRPG/Assets/ControllerCharacter.cs)  
+
+    3. NavMeshAgent를 이용한 캐릭터 제작 (+ CharacterController 와 조합해 확장)
         
 보통의 게임에서는 간단한 플레이어 움직임은 물리엔진을 사용하지 않고 2번방식을 자주 사용한다.  
-여기선 공부목적도 있어 1번을 구현하되, 플레이어의 움직임은 2번으로 한다.  
+1,2 번은 키보드에 적합한 방식이고 Click & Move 방식에 적당한 방법은 3번 NavMeshAgent이다.  
+우리는 디아블로같은 이동방식 구현할것이라 3번으로 한다. 결과만 보려면 __ 1-3 Character Controller 에 NavMesh 결합하기 __
+만 확인한다.
 
-rigidbody에 설명은 아래 (새로이 알게된것 -> 2.rigidbody 컴포넌트 구성을 알아보자) 참조.  
+
 
 ---
-__rigidbody 이동,점프 및 대쉬__  
-
+__1-1 rigidbody 이동,점프 및 대쉬__  
+    
+rigidbody 컴포넌트 구성은 다음 링크를 참조한다  
+[rigidbody 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-Rigidbody.html)   
+  
 설명에 앞서 사용하는 변수명 및 초기값은 아래와 같다.
 ```csharp
     #region Variables
@@ -129,7 +136,10 @@ AddForce 의 두번째 인자는 ForceMode이다. 여기서는 ForceMode.Velocit
 
 ---
 
-__CharacterController를 이용한 이동__
+__1-2. CharacterController를 이용한 이동__
+CharacterController 에 대한 컴포넌트 구성은 다음 링크를 참조한다  
+
+[CharacterController 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-CharacterController.html)  
 
 __ CharacterController 이동,점프 및 대쉬__  
 
@@ -154,7 +164,7 @@ __이동__
 ``` csharp
 
 <---------- update 문 일부----------->
-      isGround = characterController.isGrounded;      // raycast가 아닌 characterController의 isGrounded를 사용한다.
+      isGround = characterController.isGrounded;      // raycast가 아닌 characterController의 isGrounded를 사용한다.  
         if(isGround && calcVelocity.y < 0) // 땅에있을때 더이상 중력값의 영향을 받지 않게함
         {
             calcVelocity.y = 0;
@@ -205,6 +215,96 @@ __ 대시 __
 이것또한 세부 식은 rigidbody의 대시와 같기때문에 설명은 생략한다. 다른것이 있다면 , drags의 값을 public 변수로 받아서 사용한다는점,
 calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준다는 점이다. 
 
+---
+
+__ 1-3. Character Controller 에 NavMesh 결합하기 __ 
+
+결합하기에 앞서 Window -> AI -> Navigation 을 눌러 아래 사진과 같은 세팅을 CharacterController 와 동일하게 변경해준다  
+!(nav)[./githubImage/navMesh.png]
+그 후 Object를 눌러 빌드를 할 오브젝트를 선택해준다  
+!(build)[./githubImage/objectSettings.png]  
+
+Generate OffMeshLinks : 점프, 순간이동들을 사용할수 있나 체크해줌. 도랑, 울타리등 특정조건이 있어야 지나갈 수 있을떄 체크해준다(일단 체크해제)  
+Navigation Area : 영역을 설정하는 곳. 이동불가능한 부분(벽)은 Not Walkable로 해준다  
+
+이 후 bake를 선택해주고 , bake를 눌러준다  
+더 세부내용은 추후 진행  
+여기까지가 기본세팅이다. 그 후 캐릭터에 NavMeshAgent 컴포넌트를 추가해준다.  
+NavMeshAgent의 컴포넌트 구성은 다음 링크를 참조한다.  
+[NavMeshAgent 컴포넌트 세부구성](https://docs.unity3d.com/kr/2021.3/Manual/class-NavMeshAgent.html)  
+
+이제 우리는 키보드 입력이 아닌 Click & Move방식으로 구현할 것이다. 일단 사용할 변수는 다음과 같다.  
+
+```csharp
+    #region Variables
+
+    private CharacterController characterController;
+    private bool isGround = false;                  // 땅에 닿아있는지 확인하기 위한 변수
+    private Vector3 calcVelocity;
+    private NavMeshAgent agent;
+    private Camera camera; 
+    public LayerMask groundLayerMask;               // raycast를 통해 땅에 닿아있는지 확인하기 위한 변수
+    public float groundCheckDistance = 0.3f;
+    #endregion Variables
+
+```
+이제 점프등을 구현할 필요 가 없어졌으므로 gravity, drag등을 제거했다.
+NavMeshAgent를 사용한다. 먼저 Start에서 다음과 같이 세팅해준다
+
+``` csharp
+    void Start()
+    {
+        characterController = GetComponent<CharacterController>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.updatePosition = false;           // NavMeshAgent가 자동으로 이동하지 않게함
+        agent.updateRotation = true;            // NavMeshAgent가 자동으로 회전하게함
+
+        camera = Camera.main;
+    }
+```
+
+agent.SetDestination을 하면 자동으로 이동하지만... 우리는 이동처리는 CharacterController 로 할것이기 때문에 updatePosition을 false로 해준다.
+Update문은 다음과 같이 변경해준다.  
+```csharp
+    void Update()
+    {
+        if(Input.GetMouseButtonDown(0)) // 왼쪽 마우스 클릭
+        {
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition); // 카메라에서 마우스 위치로 레이를 쏜다.
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit, 100, groundLayerMask))      // physics.raycast 는 물체가 맞았으면 true를 리턴함
+            {
+                Debug.Log("We hit " + hit.collider.name + " " + hit.point);
+                agent.SetDestination(hit.point);    // NavMeshAgent가 이동할 목적지를 설정한다.
+            }
+        }
+
+        if(agent.remainingDistance > agent.stoppingDistance) // agent.remainingDistance 는 목적지까지 남은 거리를 리턴한다.
+        {
+            characterController.Move(agent.desiredVelocity * Time.deltaTime); // agent.desiredVelocity 는 목적지까지의 속도를 리턴한다.
+        }
+        else
+        {
+            characterController.Move(Vector3.zero);
+        }
+    }
+
+```
+구조는 되게 단순해졌다. 카메라에서 ray를 쏴서 ground 레이어에 닿으면 검출후 그곳을 목적지로 선택한다(위에서 updatePosition =true 하면 자동이동).
+우리는 updatePosition 을 꺼놓았으므로, characterController.Move를 사용한다.
+
+왜 자동이동을 꺼놨냐 하면 추후 장애물과 NPC를 피하면서 다른 충돌체와 작용할때 이것이 더 유리하다.
+
+마지막으로 정확한 좌표값으로 이동해주기위해
+``` csharp
+    private void LateUpdate()
+    {
+        transform.position = agent.nextPosition; // NavMeshAgent가 이동한 위치를 캐릭터의 위치로 설정한다.
+    }
+```
+LateUpdate에서 클릭한 위치로 적용해준다.
+결과는 다음과 같다  
+!(NavMeshResult)[./githubImage/navMeshResult.gif]  
 
 ## 공부내용.
 
@@ -218,47 +318,7 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 [정적 게임 오브젝트, 정적 설정에 대한 설명](https://docs.unity3d.com/kr/530/Manual/StaticObjects.html)
 
 ---
-2. rigidbody 컴포넌트 구성을 알아보자
 
-> rigidbody : gameobject를 물리엔진에서 제어하도록 만드는 컴포넌트이다.
-![rigidbodyOption](./githubImage/rigidbodyOption.PNG)
-
-<br>
-
-- Mass : 질량이다. rigidbody끼리 충돌할때 작용하는 요소이다.
-
-- Drag : 공기저항값이다. 값이 크면 깃털과 같이 가볍게 작용해 점프등을 할때 천천히 내려옴.
-
-- Angular Drag : 회전을 할떄의 저항값이다.
-
-- Use Gravity : 중력을 받을것인가
-
-- is Kinematic : 물리엔진이 아닌 GameObject에서 짜준 로직에 따라서 이동을 해줄것인가. (즉 이것을 체크하면 외부에서 가해지는 물리적 힘에 반응하지 않는다.
-보통 AddForce등과같은 물리거동을 사용하지 않는경우에는 충돌, 힘이 적용될때만 이것을 해제해주기도 한다.)
-
-- Interpolate : 물리엔진에서의 애니메이션을 자연스레 보관을 할것인가.
-~ None - Interpolate 기능을 사용하지 않는다
-~ Interpolate - 이전 프레임을 기반으로 보정하여 움직임을 보정한다.
-~ Extrapolate - 다음 프레임의 움직임을 추정해서 움직임을 보정한다.
-
-- Collision Detection : 충돌감지를 설정해준다.
-~ Discrete : 일반적인 충돌 감지 방식으로 모든 collider와의 충돌을 검사하여 감지한다.
-~ Continuous : 배경이나 Static 등 고정되어있는 것과의 충돌을 인식할때 사용된다.
-~ Continuous Dynamic : 위의 두 방식을 번갈아 사용하면서 충돌을 인식한다.
-~ Continuous Speculative : Continuous Dynamic 보다 성능적으로 가볍다. 다만, 실제로 충돌을 하지 않았지만 두 물체가 충돌했다고 인식하는 경우가 발생할 수 있다고 한다.
-
--Constraints : rigidbody의 움직임을 제어한다.
-
----
-
-3. Character Controller 구성에 대해서 알아보자
-![CharacterController Option](./githubImage/characterController.png)
-- Slope Limit : 캐릭터가 올라갈 수 있는 최대 경사를 의미한다.  
-- Step Offset :  올라갈 수 있는 계단의 높이  
-- Skin Width :  캐릭터 Controller 와 다른 collider가 부딛혔을때 겹칠 수 있는 값  
-- Min Move Distance :  캐릭터 이동의 최소값.  
-
----
 4. Vector & transform
 보통 우리가 사용하는 Vector3.forward 와 transform.forward를 예시로 든다. 굳이 forward에 국한되지 않고 .up, .back등에도 쓴다.
 Vector3.forward는 new Vector(0,0,1) 이 기본이다. 이것은 Read-Only Value기 때문에 바꿀수 없다.

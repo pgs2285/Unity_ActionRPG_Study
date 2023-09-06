@@ -1,67 +1,84 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class ControllerCharacter : MonoBehaviour
 {
     #region Variables
-    public float speed = 5f;
-    public float jumpHeight = 2f;
-    public float dashDistance = 5f;
+
     private CharacterController characterController;
     private bool isGround = false;                  // 땅에 닿아있는지 확인하기 위한 변수
-    public float gravity = -9.81f;
-    public Vector3 drags;
     private Vector3 calcVelocity;
+    private NavMeshAgent agent;
+    private Camera camera; 
+    public LayerMask groundLayerMask;               // raycast를 통해 땅에 닿아있는지 확인하기 위한 변수
+    public float groundCheckDistance = 0.3f;
     #endregion Variables
 
     void Start()
     {
         characterController = GetComponent<CharacterController>();
+        agent = GetComponent<NavMeshAgent>();
+        agent.updatePosition = false;           // NavMeshAgent가 자동으로 이동하지 않게함
+        agent.updateRotation = true;            // NavMeshAgent가 자동으로 회전하게함
+
+        camera = Camera.main;
     }
 
     void Update()
     {
-        isGround = characterController.isGrounded;      // raycast가 아닌 characterController의 isGrounded를 사용한다.
-        if(isGround && calcVelocity.y < 0) // 땅에있을때 더이상 중력값의 영향을 받지 않게함
+        if(Input.GetMouseButtonDown(0)) // 왼쪽 마우스 클릭
         {
-            calcVelocity.y = 0;
-        }
-        // Process Inputs
-
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical")); 
-        characterController.Move(move * speed * Time.deltaTime); // 캐릭터 컨트롤러를 이용한 이동
- 
-        if(move != Vector3.zero)
-        {
-            transform.forward = move; // transform.forward 는 앞쪽을 바라보는 방향으로 로컬 좌표계를 회전시킴.
+            Ray ray = camera.ScreenPointToRay(Input.mousePosition); // 카메라에서 마우스 위치로 레이를 쏜다.
+            RaycastHit hit;
+            if(Physics.Raycast(ray, out hit, 100, groundLayerMask))      // physics.raycast 는 물체가 맞았으면 true를 리턴함
+            {
+                Debug.Log("We hit " + hit.collider.name + " " + hit.point);
+                agent.SetDestination(hit.point);    // NavMeshAgent가 이동할 목적지를 설정한다.
+            }
         }
 
-        // Process Jump
-        if(Input.GetButtonDown("Jump") && isGround)
+        if(agent.remainingDistance > agent.stoppingDistance) // agent.remainingDistance 는 목적지까지 남은 거리를 리턴한다.
         {
-            calcVelocity.y += Mathf.Sqrt(jumpHeight * -2f * gravity); // 점프공식이다. 게임마다 구현방식이 다르다.
+            characterController.Move(agent.desiredVelocity * Time.deltaTime); // agent.desiredVelocity 는 목적지까지의 속도를 리턴한다.
         }
-        // Process Dash
-        if(Input.GetButtonDown("Dash"))
+        else
         {
-            Vector3 dashVelocity = Vector3.Scale(transform.forward,
-                dashDistance * new Vector3(Mathf.Log(1f/(Time.deltaTime * drags.x + 1 ))/ -Time.deltaTime, 
-                0,
-                (Mathf.Log(1f/(Time.deltaTime * drags.z + 1 ))/ -Time.deltaTime)
-                )
-            );
-            calcVelocity += dashVelocity;
+            characterController.Move(Vector3.zero);
         }
-
-        calcVelocity.y += gravity * Time.deltaTime; // 중력값을 계산한다.
-
-        calcVelocity.x /= 1 + drags.x * Time.deltaTime; // x축으로 이동할때마다 drags.x의 값만큼 속도를 줄인다.
-        calcVelocity.z /= 1 + drags.z * Time.deltaTime; // z축으로 이동할때마다 drags.z의 값만큼 속도를 줄인다
-        calcVelocity.y /= 1 + drags.y * Time.deltaTime; // y축으로 이동할때마다 drags.y의 값만큼 속도를 줄인다.
-
-        characterController.Move(calcVelocity * Time.deltaTime); // 캐릭터 컨트롤러를 이용한 이동
     }
 
+    private void LateUpdate()
+    {
+        transform.position = agent.nextPosition; // NavMeshAgent가 이동한 위치를 캐릭터의 위치로 설정한다.
+    }
 
+    #region Helper Methods
+
+    private void isGroundedCheck()
+    {
+        RaycastHit hit;
+
+#if UNITY_EDITOR    // 유니티 에디터에서만 실행
+    Debug.DrawLine(transform.position + (Vector3.up * 0.1f), // 시작점
+        transform.position + (Vector3.up * 0.1f) + (Vector3.down * groundCheckDistance), // 시작점에서 땅방향으로 + groundCheckDistance(끝점)
+        Color.red); // 색상
+    
+#endif
+        
+        if(Physics.Raycast(transform.position + (Vector3.up * 0.1f),    // 발에서 살짝 떨어뜨려서 raycast를 쏜다. 추후 발이 뭍히는 지형에서도 원활히 감지하기 위함
+            Vector3.down,                                               // 아래 방향으로
+            out hit,                                                    // hit에 정보를 담는다.
+            groundCheckDistance,                                        // 땅에 어느정도 가까워 졌을때 감지할지
+            groundLayerMask                                             // 땅에 대한 레이어마스크
+        )) isGround = true;
+        else isGround = false;
+
+    
+    }
+
+    #endregion Helper Methods
 }
+
+
