@@ -305,7 +305,7 @@ Update문은 다음과 같이 변경해준다.
 LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
 
-!(NavMeshResult)[./githubImage/navMeshResult.gif]  
+!(navMeshResult)[./githubImage/navMeshResult.gif]
 
 ## 공부내용.
 
