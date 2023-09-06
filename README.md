@@ -306,6 +306,7 @@ LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
 
 !(NavMeshResult)[./githubImage/navMeshResult.gif]  
+
 ## 공부내용.
 
 1. 정적 오브젝트
