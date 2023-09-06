@@ -220,9 +220,9 @@ calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준
 __ 1-3. Character Controller 에 NavMesh 결합하기 __ 
 
 결합하기에 앞서 Window -> AI -> Navigation 을 눌러 아래 사진과 같은 세팅을 CharacterController 와 동일하게 변경해준다  
-!(nav)[./githubImage/navMesh.png]
+![nav](./githubImage/navMesh.png)
 그 후 Object를 눌러 빌드를 할 오브젝트를 선택해준다  
-!(build)[./githubImage/objectSettings.png]  
+![build](./githubImage/objectSettings.png)  
 
 Generate OffMeshLinks : 점프, 순간이동들을 사용할수 있나 체크해줌. 도랑, 울타리등 특정조건이 있어야 지나갈 수 있을떄 체크해준다(일단 체크해제)  
 Navigation Area : 영역을 설정하는 곳. 이동불가능한 부분(벽)은 Not Walkable로 해준다  
@@ -305,7 +305,7 @@ Update문은 다음과 같이 변경해준다.
 LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
 
-!(navMeshResult)[./githubImage/navMeshResult.gif]
+![navMeshResult](./githubImage/navMeshResult.gif)
 
 ## 공부내용.
 
