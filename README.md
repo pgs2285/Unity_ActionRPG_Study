@@ -7,7 +7,7 @@
   
 [2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
   
-[공부내용](#공부내용)
+[공부내용](#공부내용)  
 [1. 정적오브젝트](#1-정적-오브젝트)  
 [2. vector-transform](#2-vector--transform)  
 [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
