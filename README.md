@@ -1,12 +1,12 @@
 # 목차
 [프로젝트 설명](#프로젝트-설명)
 
-[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)
-[1-2.charactercontroller를 이용한 이동] (#1-2-charactercontroller를-이용한-이동)
-[1-3.character controller 에 navmesh 결합하기(최종 이동)] (#1-3-character-controller-에-navmesh-결합하기)
-
-[2. 캐릭터 모델링 및 애니메이션 구현] (#캐릭터-모델링-및-애니메이션-구현)
-
+[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
+[1-2.charactercontroller를 이용한 이동] (#1-2-charactercontroller를-이용한-이동)  
+[1-3.character controller 에 navmesh 결합하기(최종 이동)] (#1-3-character-controller-에-navmesh-결합하기)  
+  
+[2. 캐릭터 모델링 및 애니메이션 구현] (#캐릭터-모델링-및-애니메이션-구현)  
+  
 [공부내용](#공부내용)
 
 
