@@ -324,6 +324,10 @@ LateUpdate에서 클릭한 위치로 적용해준다.
 ![navMeshResult](./githubImage/navMeshResult.gif)
 
 
+이동에 따른 카메라 이동코드는 다음 코드를 참조하면 된다
+[카메라 이동 .cs](./Unity_ActionRPG/ActionRPG/Assets/Scripts/TopDownCamera.cs)
+
+
 ---
 
 ### 캐릭터 모델링 및 애니메이션 구현  
@@ -419,6 +423,7 @@ Sub-State Layer에서는 3가지의 Idle을 랜덤 출력해준다. 3가지중 E
 해당 결과는 아래와 같다
 
 ![resultAnime](./githubImage/moveAndIdleAnimation.gif)  
+
 
 ## 공부내용.
 
