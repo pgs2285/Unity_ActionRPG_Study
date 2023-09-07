@@ -15,7 +15,7 @@ namespace JS.Cameras{
         public Transform target;
         #endregion Variables
         
-        void Update()
+        void LateUpdate()
         {
             HandleCamera();
         }
@@ -39,8 +39,11 @@ namespace JS.Cameras{
 
             // transform.position = Vector3.SmoothDamp(transform.position, finalPosition, ref refVelocity, smoothSpeed); // SmoothDamp는 현재위치, 목표위치, 속도를 받아서 부드럽게 이동시켜주는 함수
             Vector3 smoothedPosition = Vector3.Lerp(transform.position, finalPosition, smoothSpeed);
-
+            transform.position = smoothedPosition;
             transform.LookAt(target.position);  // 카메라가 타깃의 포지션을 바라보게함
         }
+
+
+
     }
 }
