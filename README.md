@@ -1,3 +1,7 @@
+# 목차
+[프로젝트 설명][#프로젝트-설명]
+
+
 # Unity_ActionRPG
 유니티로 ActionRPG(Diable등) 게임 제작하기
 
@@ -27,7 +31,7 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
 
 
 ---
-__1-1 rigidbody 이동,점프 및 대쉬__  
+### __1-1 rigidbody 이동,점프 및 대쉬__  
     
 rigidbody 컴포넌트 구성은 다음 링크를 참조한다  
 [rigidbody 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-Rigidbody.html)   
@@ -136,7 +140,7 @@ AddForce 의 두번째 인자는 ForceMode이다. 여기서는 ForceMode.Velocit
 
 ---
 
-__1-2. CharacterController를 이용한 이동__
+### 1-2. CharacterController를 이용한 이동
 CharacterController 에 대한 컴포넌트 구성은 다음 링크를 참조한다  
 
 [CharacterController 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-CharacterController.html)  
@@ -217,7 +221,7 @@ calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준
 
 ---
 
-__ 1-3. Character Controller 에 NavMesh 결합하기 __ 
+###  1-3. Character Controller 에 NavMesh 결합하기 
 
 결합하기에 앞서 Window -> AI -> Navigation 을 눌러 아래 사진과 같은 세팅을 CharacterController 와 동일하게 변경해준다  
 ![nav](./githubImage/navMesh.png)
