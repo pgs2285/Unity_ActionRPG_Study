@@ -1,3 +1,19 @@
+# 목차
+[프로젝트 설명](#프로젝트-설명)
+
+[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
+[1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
+[1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
+  
+[2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
+  
+[공부내용](#공부내용)  
+[1. 정적오브젝트](#1-정적-오브젝트)  
+[2. vector-transform](#2-vector--transform)  
+[3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
+[4. requirecomponent](#4-requirecomponent)  
+
+
 # Unity_ActionRPG
 유니티로 ActionRPG(Diable등) 게임 제작하기
 
@@ -21,13 +37,13 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
         
 보통의 게임에서는 간단한 플레이어 움직임은 물리엔진을 사용하지 않고 2번방식을 자주 사용한다.  
 1,2 번은 키보드에 적합한 방식이고 Click & Move 방식에 적당한 방법은 3번 NavMeshAgent이다.  
-우리는 디아블로같은 이동방식 구현할것이라 3번으로 한다. 결과만 보려면 __ 1-3 Character Controller 에 NavMesh 결합하기 __
+우리는 디아블로같은 click & move 이동방식을 구현할것이라 3번으로 한다. 결과만 보려면 **1-3 Character Controller 에 NavMesh 결합하기**
 만 확인한다.
 
 
 
 ---
-__1-1 rigidbody 이동,점프 및 대쉬__  
+### __1-1 rigidbody 이동,점프 및 대쉬__  
     
 rigidbody 컴포넌트 구성은 다음 링크를 참조한다  
 [rigidbody 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-Rigidbody.html)   
@@ -136,7 +152,7 @@ AddForce 의 두번째 인자는 ForceMode이다. 여기서는 ForceMode.Velocit
 
 ---
 
-__1-2. CharacterController를 이용한 이동__
+### 1-2. CharacterController를 이용한 이동
 CharacterController 에 대한 컴포넌트 구성은 다음 링크를 참조한다  
 
 [CharacterController 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-CharacterController.html)  
@@ -217,12 +233,12 @@ calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준
 
 ---
 
-__ 1-3. Character Controller 에 NavMesh 결합하기 __ 
+###  1-3. Character Controller 에 NavMesh 결합하기 
 
 결합하기에 앞서 Window -> AI -> Navigation 을 눌러 아래 사진과 같은 세팅을 CharacterController 와 동일하게 변경해준다  
-!(nav)[./githubImage/navMesh.png]
+![nav](./githubImage/navMesh.png)
 그 후 Object를 눌러 빌드를 할 오브젝트를 선택해준다  
-!(build)[./githubImage/objectSettings.png]  
+![build](./githubImage/objectSettings.png)  
 
 Generate OffMeshLinks : 점프, 순간이동들을 사용할수 있나 체크해줌. 도랑, 울타리등 특정조건이 있어야 지나갈 수 있을떄 체크해준다(일단 체크해제)  
 Navigation Area : 영역을 설정하는 곳. 이동불가능한 부분(벽)은 Not Walkable로 해준다  
@@ -304,11 +320,109 @@ Update문은 다음과 같이 변경해준다.
 ```
 LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
-!(NavMeshResult)[./githubImage/navMeshResult.gif]  
+
+![navMeshResult](./githubImage/navMeshResult.gif)
+
+
+---
+
+### 캐릭터 모델링 및 애니메이션 구현  
+
+먼저 [Mixamo](https://mixamo.com) 에서 무료 3D모델링을 다운받아준다.  
+일단 Ybot Model과 Idle 애니메이션 3개, 이동 애니메이션 하나를 받았다.  
+다운을 받고 난후, 프로젝트에 import 해준후, 기본 ybot을 클릭하면 Rig라는게 있는데,
+![ybot](./githubImage/ybot.png) 여기서 사람의 형태면 humanoid, 아니면 generic으로 설정해준다. Rig Tab에 대한 구성 설명은 아래 링크를 참조한다.  
+[Rig Tab에 대해](https://docs.unity3d.com/kr/2021.3/Manual/FBXImporter-Rig.html)  
+여기서 모바일게임과 같이 과부하가 적게 걸려야한다면 skin weight를 줄여주면 좋다. 이는 애니메이션을 할때 각 vertex가 주변의 몇개의 뼈에 영향을 받을것인가 설정해주는것이므로, 많을수록 과부하가 높다.  
+그리고 Import Setting -> animation -> apply 를 눌러주면 적용이 된다.  
+
+그 이후 나머지 Idle과 Walk는 아래같이
+![animations Setting](./githubImage/animationSetting.png)  
+** Avartar Definition 을 copy from other avatar을 설정해주고, source는 ybot 기본모델에 있는 ybotAvatar을 사용해준다. ** <- 이게 중요하다. 애니메이션을 붙여줄 아바타(모델)을 해준다.   
+아래같이 붙인 아바타에따라 애니메이션이 적용되는 대싱이 달라진다.
+![remmyTest](./githubImage/testRemmy.gif)<- Test      
+위 gif와 같이 Humanoid 에 아바타 내부 구조만 같으면 다른 모델에 Ybot애니메이션을 적용해도 잘 작동한다.
+
+유니티 아바타에 대해선 아래를 참조하되 [유니티 아바타(영문)](https://docs.unity3d.com/Manual/ConfiguringtheAvatar.html) 아무래도 제대로 이해하려면 직접 해봐야 할거같으므로
+이번 프로젝트 말미쯤에 따로 다뤄보자
+
+이제 다운받은 모델 & 애니메이션을 적용해보자.
+구조는 다음 두장의 이미지와 같다.  
+![baseLayer](./githubImage/baseLayer.png) ![sub-state_Layer](./githubImage/Sub-StateMachine.png)
+
+Base Layer애 Sub-State Layer 와 MoveAnimation을 추가해줬다.  
+Sub-State Layer에서는 3가지의 Idle을 랜덤 출력해준다. 3가지중 Entry로 들어오는 Animation에서 Add Behaviour를 눌러서 스크립트를 추가해준다.  
+사용하는 변수는 아래와 같다
+
+```csharp
+    #region Variables
+    public int numberOfStates = 3; // 기본상태를 제외한 상태의 개수
+    public float minStateTime = 0f;
+    public float maxStateTime = 5f;
+    public float randomNormalTime;
+    readonly int hashRandomIdle = Animator.StringToHash("RandomIdle");  // 스트링보다 빠른 해시값을 사용한다.
+    #endregion Variables
+```
+이 변수들은 먼저 OnStateEnter에서 애니메이션 탈출시간을 Random으로 설정해준다.
+
+```csharp
+    override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        randomNormalTime = Random.Range(minStateTime, maxStateTime);
+    }
+
+```  
+
+이 랜덤으로 설정해준 randomNormalTime은 아래에서 OnStateUpdate에서 사용해준다
+``` csharp
+    override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+       if(animator.IsInTransition(0) && animator.GetCurrentAnimatorStateInfo(0).fullPathHash == stateInfo.fullPathHash)
+       // 만약 base layer(0번레이어)에 있거나, 현재 재생 중인 애니메이션 상태의 fullPathHash가 stateInfo로 지정된 애니메이션 상태의 fullPathHash와 동일하다면
+       // fullPathHash 는 고유 식별자이다.
+       // 즉 베이스레이어에 있으며 현재상태의 이름과 (0번 레이어)의 경로가 같으면 들어와있지 않은것
+       {
+            animator.SetInteger(hashRandomIdle, -1);
+       }
+       if(stateInfo.normalizedTime * 2> randomNormalTime && !animator.IsInTransition(0))
+       {
+            // Debug.Log(stateInfo.normalizedTime);    // 보니까 이거 실제 시간이 아니라 애니메이션의 정규화된 시간이다.
+            animator.SetInteger(hashRandomIdle, Random.Range(0,numberOfStates));
+       }
+    }
+```
+
+특이사항은 animator.SetInteger해줄때 첫번째 인자에 string을 넣어주지 않고, 위에서 선언한 readonly int hashRandomIdle 을 넣어줬는데 이는, string으로 처리하는것보다 int해시 값으로  
+변환해서 하는것이 처리속도 측면에서 훨신 빠르기 때문이다.   
+
+움직이는 함수는 기존 CharacterController에 SetBool만 추가해준다.
+```csharp
+    <--------- 변수추가 --------->
+    private Animator animator;
+    readonly int moveHash = Animator.StringToHash("Move");
+    <-------------------------->
+    
+    <---------CharacterController Update ---------->
+    if(agent.remainingDistance > agent.stoppingDistance) // agent.remainingDistance 는 목적지까지 남은 거리를 리턴한다.
+    {
+        characterController.Move(agent.desiredVelocity * Time.deltaTime); // agent.desiredVelocity 는 목적지까지의 속도를 리턴한다.
+        animator.SetBool(moveHash, true);
+    }
+    else
+    {
+        characterController.Move(Vector3.zero);
+        animator.SetBool(moveHash, false);
+    }
+    <---------------------------------------------->
+```
+
+해당 결과는 아래와 같다
+
+![resultAnime](./githubImage/moveAndIdleAnimation.gif)  
 
 ## 공부내용.
 
-1. 정적 오브젝트
+#### 1. 정적 오브젝트
 
 ![staticBox](./githubImage/static.png)
 ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 좋다. 이는 정적 오브젝트가 포지션 변화로 인해 무효화 될일이 없다는것을 체크해주는것으로,
@@ -319,7 +433,7 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 
 ---
 
-4. Vector & transform
+#### 2. Vector & transform
 보통 우리가 사용하는 Vector3.forward 와 transform.forward를 예시로 든다. 굳이 forward에 국한되지 않고 .up, .back등에도 쓴다.
 Vector3.forward는 new Vector(0,0,1) 이 기본이다. 이것은 Read-Only Value기 때문에 바꿀수 없다.
 transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서 물체가 바라보는 방향을 바꿔주고싶으면 
@@ -336,7 +450,7 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 즉 사용 용도가 완전히 다르다.
 
 ---
-5. Update, FixedUpdate, LateUpdate
+#### 3. Update, FixedUpdate, LateUpdate
 ~ Update - 매 프레임마다 처리되는 작업이다. 때문에 그래픽 랜더링 속도에 따라 느려지거나 빨라지고 있어서, 원하지않은 물리적 충돌이 발생할 수 있다.
 ~ FixedUpdate - 물리엔진 위에서 동작한다. 즉 고정된 시간마다 실행하는데 이때문에 보통 이동,회전,힘에서 사용한다.
 ~ LateUpdate - Update문 호출이되고 가장 마지막에 호출되는 문이다
@@ -345,4 +459,13 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 입력은 Update, 이동처리는 FixedUpdate, 카메라 움직임은 LateUpdate에 구현해주면 보다 부드럽게 구현 할 수 있다.
 
 ---
+
+#### 4. RequireComponent  
+스크립트에서 유용하게 사용할 수 있는 기능이다. 만약 한 GameObject에 스크립트를 추가한것 만으로 필요한 컴포넌트등을 추가해주고 싶다면,
+```csharp  
+[RequireComponent(typeof(CharacterController)), RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator))]
+public class ControllerCharacter : MonoBehaviour {...}
+```  
+이렇게 해주면 나중에 ControllerCharacter만 불러오더라도 , RequireComponent에 적은 모든 컴포넌트를 불러올 수 있다.
+
 

@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
+[RequireComponent(typeof(CharacterController)), RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator))]
 public class ControllerCharacter : MonoBehaviour
 {
+    
     #region Variables
 
     private CharacterController characterController;
@@ -14,6 +16,10 @@ public class ControllerCharacter : MonoBehaviour
     private Camera camera; 
     public LayerMask groundLayerMask;               // raycast를 통해 땅에 닿아있는지 확인하기 위한 변수
     public float groundCheckDistance = 0.3f;
+    [SerializeField]
+    private Animator animator;
+    readonly int moveHash = Animator.StringToHash("Move");
+
     #endregion Variables
 
     void Start()
@@ -42,11 +48,14 @@ public class ControllerCharacter : MonoBehaviour
         if(agent.remainingDistance > agent.stoppingDistance) // agent.remainingDistance 는 목적지까지 남은 거리를 리턴한다.
         {
             characterController.Move(agent.desiredVelocity * Time.deltaTime); // agent.desiredVelocity 는 목적지까지의 속도를 리턴한다.
+            animator.SetBool(moveHash, true);
         }
         else
         {
             characterController.Move(Vector3.zero);
+            animator.SetBool(moveHash, false);
         }
+
     }
 
     private void LateUpdate()
