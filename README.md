@@ -418,7 +418,7 @@ Sub-State Layer에서는 3가지의 Idle을 랜덤 출력해준다. 3가지중 E
 
 ## 공부내용.
 
-1. 정적 오브젝트
+#### 1. 정적 오브젝트
 
 ![staticBox](./githubImage/static.png)
 ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 좋다. 이는 정적 오브젝트가 포지션 변화로 인해 무효화 될일이 없다는것을 체크해주는것으로,
@@ -429,7 +429,7 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 
 ---
 
-2. Vector & transform
+#### 2. Vector & transform
 보통 우리가 사용하는 Vector3.forward 와 transform.forward를 예시로 든다. 굳이 forward에 국한되지 않고 .up, .back등에도 쓴다.
 Vector3.forward는 new Vector(0,0,1) 이 기본이다. 이것은 Read-Only Value기 때문에 바꿀수 없다.
 transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서 물체가 바라보는 방향을 바꿔주고싶으면 
@@ -446,7 +446,7 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 즉 사용 용도가 완전히 다르다.
 
 ---
-3. Update, FixedUpdate, LateUpdate
+#### 3. Update, FixedUpdate, LateUpdate
 ~ Update - 매 프레임마다 처리되는 작업이다. 때문에 그래픽 랜더링 속도에 따라 느려지거나 빨라지고 있어서, 원하지않은 물리적 충돌이 발생할 수 있다.
 ~ FixedUpdate - 물리엔진 위에서 동작한다. 즉 고정된 시간마다 실행하는데 이때문에 보통 이동,회전,힘에서 사용한다.
 ~ LateUpdate - Update문 호출이되고 가장 마지막에 호출되는 문이다
@@ -456,7 +456,7 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 
 ---
 
-4. RequireComponent  
+#### 4. RequireComponent  
 스크립트에서 유용하게 사용할 수 있는 기능이다. 만약 한 GameObject에 스크립트를 추가한것 만으로 필요한 컴포넌트등을 추가해주고 싶다면,
 ```csharp  
 [RequireComponent(typeof(CharacterController)), RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator))]
