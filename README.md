@@ -1,3 +1,19 @@
+# 목차
+[프로젝트 설명](#프로젝트-설명)
+
+[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
+[1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
+[1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
+  
+[2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
+  
+[공부내용](#공부내용)  
+[1. 정적오브젝트](#1-정적-오브젝트)  
+[2. vector-transform](#2-vector--transform)  
+[3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
+[4. requirecomponent](#4-requirecomponent)  
+
+
 # Unity_ActionRPG
 유니티로 ActionRPG(Diable등) 게임 제작하기
 
@@ -24,10 +40,10 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
 우리는 디아블로같은 click & move 이동방식을 구현할것이라 3번으로 한다. 결과만 보려면 **1-3 Character Controller 에 NavMesh 결합하기**
 만 확인한다.
 
-
+**카메라의 기능을 굳이 Scene Editor로 확장한 이유는 추후 캐릭터에 AI를 추가한다던지 디버깅을 쉽게한다던지를 쉽게 확장하기위해 추가해보았다. 잘 익혀두자.**
 
 ---
-__1-1 rigidbody 이동,점프 및 대쉬__  
+### __1-1 rigidbody 이동,점프 및 대쉬__  
     
 rigidbody 컴포넌트 구성은 다음 링크를 참조한다  
 [rigidbody 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-Rigidbody.html)   
@@ -136,7 +152,7 @@ AddForce 의 두번째 인자는 ForceMode이다. 여기서는 ForceMode.Velocit
 
 ---
 
-__1-2. CharacterController를 이용한 이동__
+### 1-2. CharacterController를 이용한 이동
 CharacterController 에 대한 컴포넌트 구성은 다음 링크를 참조한다  
 
 [CharacterController 컴포넌트 구성](https://docs.unity3d.com/kr/2021.3/Manual/class-CharacterController.html)  
@@ -217,7 +233,7 @@ calcVelocity에 더해준후 마지막에 이 값을 Move를 통해 처리해준
 
 ---
 
-__ 1-3. Character Controller 에 NavMesh 결합하기 __ 
+###  1-3. Character Controller 에 NavMesh 결합하기 
 
 결합하기에 앞서 Window -> AI -> Navigation 을 눌러 아래 사진과 같은 세팅을 CharacterController 와 동일하게 변경해준다  
 ![nav](./githubImage/navMesh.png)
@@ -306,6 +322,10 @@ LateUpdate에서 클릭한 위치로 적용해준다.
 결과는 다음과 같다  
 
 ![navMeshResult](./githubImage/navMeshResult.gif)
+
+
+이동에 따른 카메라 이동코드는 다음 코드를 참조하면 된다
+[카메라 이동 .cs](./Unity_ActionRPG/ActionRPG/Assets/Scripts/TopDownCamera.cs)
 
 
 ---
@@ -404,9 +424,120 @@ Sub-State Layer에서는 3가지의 Idle을 랜덤 출력해준다. 3가지중 E
 
 ![resultAnime](./githubImage/moveAndIdleAnimation.gif)  
 
+
+### 3. 카메라 에디터로 확장하기  
+이전에 만든 카메라 코드가 하나 있다  
+```csharp
+        public void HandleCamera()
+        {
+            if(!Target) return;
+
+            // 카메라의 월드포지션 계산.
+            Vector3 worldPosition = (Vector3.forward * -distance) + (Vector3.up * height); // 타겟 뒤쪽을 잡기위해 farword의 distance를 곱해주고, 위로 height만큼 올려준다.
+            Vector3 rotatedVector = Quaternion.AngleAxis(angle, Vector3.up) * worldPosition; // AngleAxis는 각도와 축을 받아서 회전시키는 함수
+            Vector3 finalTargetPosition = Target.position;
+            finalTargetPosition.y += lookAtHeight; // 캐릭터의 머리를 바라보게 하기 위해 높이를 더해준다.
+            Vector3 finalPosition = finalTargetPosition + rotatedVector; 
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, finalPosition, smoothSpeed);
+            transform.position = smoothedPosition;
+            transform.LookAt(Target.position);  // 카메라가 타깃의 포지션을 바라보게함
+        }
+```   
+이 코드는 카메라가 사람을 부드럽게 따라다니도록 만들어준 코드였다. 하지만 단점이 있었는데, Inspector창에서 하나하나 수치값을 맞춰 주기에는 힘들다는 점이었다.  
+이를 Editor를 이용해 Scene에서 쉽게 조정할 수 있게하고, 덧붙여 Scene에서 더욱 카메라의 정보를 쉽게 알아볼 수 있게 만들것이다.  
+해당 코드는 게임실행중 돌아가는 코드가 아니므로, Monobehaviour가 아닌 Editor를 상속한다.  
+코드 전문을 한번 보자
+``` csharp
+namespace JS.Cameras{
+    [CustomEditor(typeof(TopDownCamera))]
+    public class TopDownCamera_Editor : Editor
+    {
+        #region Variables
+        private TopDownCamera targetCamera;
+        #endregion Variables
+
+        public override void OnInspectorGUI()
+        {
+            targetCamera = (TopDownCamera)target; // target은 editor제공해주는 변수로 현재 인스펙터에 있는 컴포넌트를 가리킨다.
+            base.OnInspectorGUI();  //이거 호출안하면 Inspector에 추가안됨.
+        }
+
+
+```  
+**OnInspectorGUI :  선택한 오브젝트가 인스펙터 윈도우에 표시될때 호출되는 함수**
+**OnSceneGUI : 선택한 오브젝트가 Scene상에서 표시되게함.**  
+먼저 OnInspectorGUI에서는 TopDownCamera라는 스크립트를 가진 GameObject대상으로 한다고 선언해준다.  
+즉 선택된 스크립트나 컴포넌트를 TopDownCamera 클래스의 인스턴스로 형변환하여 targetCamera 변수에 저장한다.  
+ 
+우리가 주로 사용할 것은 아래의 OnSceneGUI이다.  
+
+```
+        private void OnSceneGUI()
+        {
+            if(!targetCamera || !targetCamera.Target) return;
+
+            Transform cameraTarget = targetCamera.Target;   // 타겟의 트랜스폼을 가져온다.
+            Vector3 targetPosition = cameraTarget.position; // 타겟의 포지션을 가져온다.
+            targetPosition.y = targetCamera.lookAtHeight;   // 타겟의 높이를 가져온다.
+            
+            Handles.color = new Color(1f,0f,0f,0.15f);    // 핸들의 색상을 설정한다. (빨간색)
+            Handles.DrawSolidDisc(targetPosition, Vector3.up, targetCamera.distance);
+
+            Handles.color = new Color(0f,1f,0f,0.75f);    // 핸들의 색상을 설정한다.
+            Handles.DrawWireDisc(targetPosition, Vector3.up, targetCamera.distance);
+             
+            Handles.color = new Color(1f,0f,0f,0.5f);
+            targetCamera.distance = Handles.ScaleSlider(targetCamera.distance, targetPosition, -cameraTarget.forward, Quaternion.identity, targetCamera.distance, 0.1f);
+
+            targetCamera.distance = Mathf.Clamp(targetCamera.distance, 2f, float.MaxValue);    // 2f~ float가 가질수 있는 최대값사이의 값으로 제한.
+
+            Handles.color = new Color(0f,1f,0f,0.5f);
+            targetCamera.height = Handles.ScaleSlider(targetCamera.height, targetPosition, Vector3.up, Quaternion.identity, targetCamera.height,0.1f);
+
+            targetCamera.height = Mathf.Clamp(targetCamera.height, 2f, float.MaxValue);    // 2f~ float가 가질수 있는 최대값사이의 값으로 제한.
+
+            GUIStyle labelStyle = new GUIStyle();
+            labelStyle.fontSize = 15;
+            labelStyle.normal.textColor = Color.white;
+            labelStyle.alignment = TextAnchor.MiddleCenter;
+
+            Handles.Label(targetPosition +(-cameraTarget.forward * targetCamera.distance), "Distance", labelStyle);
+
+            labelStyle.alignment = TextAnchor.MiddleRight;
+            Handles.Label(targetPosition + (Vector3.up * targetCamera.height),"Height", labelStyle);
+
+            targetCamera.HandleCamera();
+        }
+    }
+}
+
+```  
+먼저 위에서 가져온 cameraTarget을 가져오고 변수를 만들어 cameraTarget에 저장해주고 position정보를 targetPosition이라는 Vector3에 저장해준다.
+그후 현재 카메라의 높이를 가져와서 targetPosition.y에 넣어준다.
+
+먼저 카메라와 떨어진 거리를(distance) 반지름으로하는 디스크를 카메라 끝에 넣어주고, 그 색을 0.15f의 alpha값을 가진 빨간색에 넣어준다
+그 밑에도 DrawWireDisc(원모양인데 테두리만)를 같이 추가해준다.  
+
+다음은 distance와 Height를 Scene에서 쉽게 바꿔줄수있게 grabbable 할수있는것을 추가해준다.
+그게 Handles.ScaleSlider이다.  
+여러개의 매개변수를 받는데 이는 다음과 같다.  
+
+value: 슬라이더의 현재 값. 이 값은 슬라이더를 조작하여 변경된다. 이 경우 targetCamera.distance& targetCamera.heught가 현재 값으로 사용된다.
+position: 슬라이더가 표시될 위치. 슬라이더 핸들이 이 위치에 나타납니다
+direction: 슬라이더가 조작될 방향. -cameraTarget.forward는 카메라 타겟(character)의 정면 방향을 나타내고, Vector3.up는 타켓의 윗방향으로 슬라이더가 움직이게 된다
+rotation: 슬라이더 핸들의 회전을 정의하는 Quaternion. Quaternion.identity는 회전을 적용하지 않는 것을 의미한다.
+sliderMin: 슬라이더의 최소 값이다.  
+sliderMax: 슬라이더의 최대 값이다.  
+
+그 이후 코드들은 슬라이더에 문구를 달아주는것이다.  
+
+결과는 다음과 같다  
+![cameraEditor](./githubImage/cameraEditor.gif)  
+
+
 ## 공부내용.
 
-1. 정적 오브젝트
+#### 1. 정적 오브젝트
 
 ![staticBox](./githubImage/static.png)
 ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 좋다. 이는 정적 오브젝트가 포지션 변화로 인해 무효화 될일이 없다는것을 체크해주는것으로,
@@ -417,7 +548,7 @@ ground 와 같이 움직이지 않는것들은 static을 표기해주는 것이 
 
 ---
 
-2. Vector & transform
+#### 2. Vector & transform
 보통 우리가 사용하는 Vector3.forward 와 transform.forward를 예시로 든다. 굳이 forward에 국한되지 않고 .up, .back등에도 쓴다.
 Vector3.forward는 new Vector(0,0,1) 이 기본이다. 이것은 Read-Only Value기 때문에 바꿀수 없다.
 transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서 물체가 바라보는 방향을 바꿔주고싶으면 
@@ -434,7 +565,7 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 즉 사용 용도가 완전히 다르다.
 
 ---
-3. Update, FixedUpdate, LateUpdate
+#### 3. Update, FixedUpdate, LateUpdate
 ~ Update - 매 프레임마다 처리되는 작업이다. 때문에 그래픽 랜더링 속도에 따라 느려지거나 빨라지고 있어서, 원하지않은 물리적 충돌이 발생할 수 있다.
 ~ FixedUpdate - 물리엔진 위에서 동작한다. 즉 고정된 시간마다 실행하는데 이때문에 보통 이동,회전,힘에서 사용한다.
 ~ LateUpdate - Update문 호출이되고 가장 마지막에 호출되는 문이다
@@ -444,7 +575,7 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 
 ---
 
-4. RequireComponent  
+#### 4. RequireComponent  
 스크립트에서 유용하게 사용할 수 있는 기능이다. 만약 한 GameObject에 스크립트를 추가한것 만으로 필요한 컴포넌트등을 추가해주고 싶다면,
 ```csharp  
 [RequireComponent(typeof(CharacterController)), RequireComponent(typeof(NavMeshAgent)), RequireComponent(typeof(Animator))]
