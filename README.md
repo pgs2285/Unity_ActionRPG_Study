@@ -1,20 +1,20 @@
 # 목차
-[프로젝트 설명](#프로젝트-설명)
+*[프로젝트 설명](#프로젝트-설명)
 
-[1 이동구현](1-1-rigidbody-이동점프-및-대쉬)
-   [1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
-   [1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
-   [1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
+*[1 이동구현](1-1-rigidbody-이동점프-및-대쉬)
+   -[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
+   -[1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
+   -[1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
   
-[2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
+*[2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
 
-[3. Editor를 사용해 카메라 에디터로 확장하기(쉽게 수치 조정하기)](#3-카메라-에디터로-확장하기)
+*[3. Editor를 사용해 카메라 에디터로 확장하기(쉽게 수치 조정하기)](#3-카메라-에디터로-확장하기)
   
-[공부내용](#공부내용)  
-   [1. 정적오브젝트](#1-정적-오브젝트)  
-   [2. vector-transform](#2-vector--transform)  
-   [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
-   [4. requirecomponent](#4-requirecomponent)  
+*[공부내용](#공부내용)  
+   -[1. 정적오브젝트](#1-정적-오브젝트)  
+   -[2. vector-transform](#2-vector--transform)  
+   -[3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
+   -[4. requirecomponent](#4-requirecomponent)  
 
 
 # Unity_ActionRPG
