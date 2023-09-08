@@ -524,12 +524,12 @@ namespace JS.Cameras{
 그게 Handles.ScaleSlider이다.  
 여러개의 매개변수를 받는데 이는 다음과 같다.  
 
-value: 슬라이더의 현재 값. 이 값은 슬라이더를 조작하여 변경된다. 이 경우 targetCamera.distance& targetCamera.heught가 현재 값으로 사용된다.
-position: 슬라이더가 표시될 위치. 슬라이더 핸들이 이 위치에 나타납니다
-direction: 슬라이더가 조작될 방향. -cameraTarget.forward는 카메라 타겟(character)의 정면 방향을 나타내고, Vector3.up는 타켓의 윗방향으로 슬라이더가 움직이게 된다
-rotation: 슬라이더 핸들의 회전을 정의하는 Quaternion. Quaternion.identity는 회전을 적용하지 않는 것을 의미한다.
-sliderMin: 슬라이더의 최소 값이다.  
-sliderMax: 슬라이더의 최대 값이다.  
+-value: 슬라이더의 현재 값. 이 값은 슬라이더를 조작하여 변경된다. 이 경우 targetCamera.distance& targetCamera.heught가 현재 값으로 사용된다.  
+-position: 슬라이더가 표시될 위치. 슬라이더 핸들이 이 위치에 나타낸다.  
+-direction: 슬라이더가 조작될 방향. -cameraTarget.forward는 카메라 타겟(character)의 정면 방향을 나타내고, Vector3.up는 타켓의 윗방향으로 슬라이더가 움직이게 된다  
+-rotation: 슬라이더 핸들의 회전을 정의하는 Quaternion. Quaternion.identity는 회전을 적용하지 않는 것을 의미한다.  
+-sliderMin: 슬라이더의 최소 값이다.    
+-sliderMax: 슬라이더의 최대 값이다.    
 
 그 이후 코드들은 슬라이더에 문구를 달아주는것이다.  
 
