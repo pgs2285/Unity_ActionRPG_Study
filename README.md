@@ -14,7 +14,8 @@
    - [1. 정적오브젝트](#1-정적-오브젝트)  
    - [2. vector-transform](#2-vector--transform)  
    - [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
-   - [4. requirecomponent](#4-requirecomponent)  
+   - [4. requirecomponent](#4-requirecomponent)
+   - [5. light system (realtime, bake(lightmap, light probe...))](#5-light-system)
 
 
 # Unity_ActionRPG
