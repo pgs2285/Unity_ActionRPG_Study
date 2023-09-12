@@ -14,7 +14,8 @@
    - [1. 정적오브젝트](#1-정적-오브젝트)  
    - [2. vector-transform](#2-vector--transform)  
    - [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
-   - [4. requirecomponent](#4-requirecomponent)  
+   - [4. requirecomponent](#4-requirecomponent)
+   - [5. light system (realtime, bake(lightmap, light probe...))](#5-light-system)
 
 
 # Unity_ActionRPG
@@ -536,46 +537,7 @@ namespace JS.Cameras{
 결과는 다음과 같다  
 ![cameraEditor](./githubImage/cameraEditor.gif)  
 
-### Light System  
-화면에 빛들은 Direct Light + Undirect Light를 합쳐서 우리들 눈에 보여진다.  
-하지만 유니티에서는 이러한 연산을 계속한다면 과부하가 심하기 때문에 Texture에 저장을 해서 사용한다. 이를 Lightmap 기법이라고 한다.  
-Unlit(빛의 영향을 받지않는 쉐이더) + Lightmap을 헤주면 빛의 영향을 받는 결과가 나온다. 즉 Direct&Undirect Light의 결과값을(Global illumination)을 용하는것을,  
-이러한 방식을 유니티에서는 베이킹(baking) 이라고 한다.  
-먼저 3D Light의 Mode에는 3가지의 옵션이 보이는데,  
-* RealTime : 실시간으로 고정된 오브젝트와 다이나믹 오브젝트에 광원효과를 주며 밑의 그림자 속성에 따라서 그림자를 생성한다 (Global illumination baking에 포함되지 않는다.) 
-* Mixed : 정적인 오브젝트에는 Light mappig, 동적인 오브젝트에는 실시간을 적용한다.
-* Baked : 정적인 오브젝트들에만 영향을 미친다.  
 
-즉 Bake된 구역들을 동적오브젝트인 character가 돌아다녀도 영향을 끼치지 못하는데, 이를 변경해주고 싶으면 추후 서술할 Light Probes를 확인한다.  
-**위에서 동적, 정적이라 설명했는데 쉽게 말하면 static의 체크 여부이다.**
-
-#### light 세팅 팁
-**던전같이 빛이 들어 오지 않는 환경은 Window -> Rendering -> Lighting -> Environment 에서 Sun Source 와 Sky Box Material를 제거함으로 구현할 수 있다**  
-**Lightmap Setting 에는 Lightmapper라는게 있다. 속성중 Enlighten은 사라질 예정이고, Progressive CPU와 Progressive GPU가 있는데, 보통 속도는 빠르지만 정밀도가 떨어지는 Progressive GPU는 개발중에
-많이 사용하고, 빌드할때는 Progress CPU로 빌드하는게 좋다.**  
-**사양이 좋은 PC에서는 세팅들을 Auto Generate해도 좋다(자동베이킹)**  
-
-#### light probe    
-light probe 또한 조명정보를 scene에 저장하는 기법이다.  
-lightmap이 표면에대한 정보를 저장한다면 light probe는 공간에 대한 정보를 저장한다. 즉 카메라로 캡처하면 이미지가 되는데 이를 큐브맵으로 저장한다.    
-다이나믹 게임오브젝트에 global illumination 효과를 주고싶을때 사용하면 좋다.  
-##### 사용법  
-Hierarchy 창에 우클릭하고 light 컴포넌트 내부에 light probe group을 눌러 생성해주면 된다.  
-누르면 정육면체 모양으로 꼭지점 위치 하나당 노드 하나가 나오는데 이 노드마다 위치에 대한 정보를 저장하고 있다.  
-
-
-#### reflextion probe  
-빛이 반사가되는 수면같은 부분에 구역을 설정해서 배치해주면 좋다.  
-
-결과는 아래와 같다  
-![light](./githubImage/light.gif)
-
-
-
-
-
-  
-[lighting Window 속성들을 알아보자](https://docs.unity3d.com/kr/2018.4/Manual/GlobalIllumination.html)
 
 
 
@@ -626,5 +588,41 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 public class ControllerCharacter : MonoBehaviour {...}
 ```  
 이렇게 해주면 나중에 ControllerCharacter만 불러오더라도 , RequireComponent에 적은 모든 컴포넌트를 불러올 수 있다.
+
+#### 5. Light System  
+화면에 빛들은 Direct Light + Undirect Light를 합쳐서 우리들 눈에 보여진다.  
+하지만 유니티에서는 이러한 연산을 계속한다면 과부하가 심하기 때문에 Texture에 저장을 해서 사용한다. 이를 Lightmap 기법이라고 한다.  
+Unlit(빛의 영향을 받지않는 쉐이더) + Lightmap을 헤주면 빛의 영향을 받는 결과가 나온다. 즉 Direct&Undirect Light의 결과값을(Global illumination)을 용하는것을,  
+이러한 방식을 유니티에서는 베이킹(baking) 이라고 한다.  
+먼저 3D Light의 Mode에는 3가지의 옵션이 보이는데,  
+* RealTime : 실시간으로 고정된 오브젝트와 다이나믹 오브젝트에 광원효과를 주며 밑의 그림자 속성에 따라서 그림자를 생성한다 (Global illumination baking에 포함되지 않는다.) 
+* Mixed : 정적인 오브젝트에는 Light mappig, 동적인 오브젝트에는 실시간을 적용한다.
+* Baked : 정적인 오브젝트들에만 영향을 미친다.  
+
+즉 Bake된 구역들을 동적오브젝트인 character가 돌아다녀도 영향을 끼치지 못하는데, 이를 변경해주고 싶으면 추후 서술할 Light Probes를 확인한다.  
+**위에서 동적, 정적이라 설명했는데 쉽게 말하면 static의 체크 여부이다.**
+
+##### light 세팅 팁
+**던전같이 빛이 들어 오지 않는 환경은 Window -> Rendering -> Lighting -> Environment 에서 Sun Source 와 Sky Box Material를 제거함으로 구현할 수 있다**  
+**Lightmap Setting 에는 Lightmapper라는게 있다. 속성중 Enlighten은 사라질 예정이고, Progressive CPU와 Progressive GPU가 있는데, 보통 속도는 빠르지만 정밀도가 떨어지는 Progressive GPU는 개발중에
+많이 사용하고, 빌드할때는 Progress CPU로 빌드하는게 좋다.**  
+**사양이 좋은 PC에서는 세팅들을 Auto Generate해도 좋다(자동베이킹)**  
+
+##### light probe    
+light probe 또한 조명정보를 scene에 저장하는 기법이다.  
+lightmap이 표면에대한 정보를 저장한다면 light probe는 공간에 대한 정보를 저장한다. 즉 카메라로 캡처하면 이미지가 되는데 이를 큐브맵으로 저장한다.    
+다이나믹 게임오브젝트에 global illumination 효과를 주고싶을때 사용하면 좋다.  
+##### 사용법  
+Hierarchy 창에 우클릭하고 light 컴포넌트 내부에 light probe group을 눌러 생성해주면 된다.  
+누르면 정육면체 모양으로 꼭지점 위치 하나당 노드 하나가 나오는데 이 노드마다 위치에 대한 정보를 저장하고 있다.  
+
+
+##### reflextion probe  
+빛이 반사가되는 수면같은 부분에 구역을 설정해서 배치해주면 좋다.  
+
+결과는 아래와 같다  
+![light](./githubImage/light.gif)
+  
+[lighting Window 속성들을 알아보자](https://docs.unity3d.com/kr/2018.4/Manual/GlobalIllumination.html)
 
 
