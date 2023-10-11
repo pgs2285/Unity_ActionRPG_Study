@@ -1,17 +1,22 @@
 # 목차
-[프로젝트 설명](#프로젝트-설명)
+* [프로젝트 설명](#프로젝트-설명)
 
-[1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
-[1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
-[1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
+* [1 이동구현](1-1-rigidbody-이동점프-및-대쉬)  
+   - [1-1.rigidbody 이동점프 및 대쉬](#1-1-rigidbody-이동점프-및-대쉬)  
+   - [1-2.charactercontroller를 이용한 이동](#1-2-charactercontroller를-이용한-이동)  
+   - [1-3.character controller 에 navmesh 결합하기(최종 이동)](#1-3-character-controller-에-navmesh-결합하기)  
   
-[2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
+* [2. 캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)  
+
+* [3. Editor를 사용해 카메라 에디터로 확장하기(쉽게 수치 조정하기)](#3-카메라-에디터로-확장하기)
   
-[공부내용](#공부내용)  
-[1. 정적오브젝트](#1-정적-오브젝트)  
-[2. vector-transform](#2-vector--transform)  
-[3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
-[4. requirecomponent](#4-requirecomponent)  
+* [공부내용](#공부내용)  
+   - [1. 정적오브젝트](#1-정적-오브젝트)  
+   - [2. vector-transform](#2-vector--transform)  
+   - [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
+   - [4. requirecomponent](#4-requirecomponent)
+   - [5. light system (realtime, bake(lightmap, light probe...))](#5-light-system)
+   - [6. Terrain System](#6-terrain-system)
 
 
 # Unity_ActionRPG
@@ -40,7 +45,7 @@ __공부내용__  에는 내가 그동안 무심코 지나치며 적용했던 �
 우리는 디아블로같은 click & move 이동방식을 구현할것이라 3번으로 한다. 결과만 보려면 **1-3 Character Controller 에 NavMesh 결합하기**
 만 확인한다.
 
-
+**카메라의 기능을 굳이 Scene Editor로 확장한 이유는 추후 캐릭터에 AI를 추가한다던지 디버깅을 쉽게한다던지를 쉽게 확장하기위해 추가해보았다. 잘 익혀두자.**
 
 ---
 ### __1-1 rigidbody 이동,점프 및 대쉬__  
@@ -425,6 +430,118 @@ Sub-State Layer에서는 3가지의 Idle을 랜덤 출력해준다. 3가지중 E
 ![resultAnime](./githubImage/moveAndIdleAnimation.gif)  
 
 
+### 3. 카메라 에디터로 확장하기  
+이전에 만든 카메라 코드가 하나 있다  
+```csharp
+        public void HandleCamera()
+        {
+            if(!Target) return;
+
+            // 카메라의 월드포지션 계산.
+            Vector3 worldPosition = (Vector3.forward * -distance) + (Vector3.up * height); // 타겟 뒤쪽을 잡기위해 farword의 distance를 곱해주고, 위로 height만큼 올려준다.
+            Vector3 rotatedVector = Quaternion.AngleAxis(angle, Vector3.up) * worldPosition; // AngleAxis는 각도와 축을 받아서 회전시키는 함수
+            Vector3 finalTargetPosition = Target.position;
+            finalTargetPosition.y += lookAtHeight; // 캐릭터의 머리를 바라보게 하기 위해 높이를 더해준다.
+            Vector3 finalPosition = finalTargetPosition + rotatedVector; 
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, finalPosition, smoothSpeed);
+            transform.position = smoothedPosition;
+            transform.LookAt(Target.position);  // 카메라가 타깃의 포지션을 바라보게함
+        }
+```   
+이 코드는 카메라가 사람을 부드럽게 따라다니도록 만들어준 코드였다. 하지만 단점이 있었는데, Inspector창에서 하나하나 수치값을 맞춰 주기에는 힘들다는 점이었다.  
+이를 Editor를 이용해 Scene에서 쉽게 조정할 수 있게하고, 덧붙여 Scene에서 더욱 카메라의 정보를 쉽게 알아볼 수 있게 만들것이다.  
+해당 코드는 게임실행중 돌아가는 코드가 아니므로, Monobehaviour가 아닌 Editor를 상속한다.  
+코드 전문을 한번 보자
+``` csharp
+namespace JS.Cameras{
+    [CustomEditor(typeof(TopDownCamera))]
+    public class TopDownCamera_Editor : Editor
+    {
+        #region Variables
+        private TopDownCamera targetCamera;
+        #endregion Variables
+
+        public override void OnInspectorGUI()
+        {
+            targetCamera = (TopDownCamera)target; // target은 editor제공해주는 변수로 현재 인스펙터에 있는 컴포넌트를 가리킨다.
+            base.OnInspectorGUI();  //이거 호출안하면 Inspector에 추가안됨.
+        }
+
+
+```  
+**OnInspectorGUI :  선택한 오브젝트가 인스펙터 윈도우에 표시될때 호출되는 함수**
+**OnSceneGUI : 선택한 오브젝트가 Scene상에서 표시되게함.**  
+먼저 OnInspectorGUI에서는 TopDownCamera라는 스크립트를 가진 GameObject대상으로 한다고 선언해준다.  
+즉 선택된 스크립트나 컴포넌트를 TopDownCamera 클래스의 인스턴스로 형변환하여 targetCamera 변수에 저장한다.  
+ 
+우리가 주로 사용할 것은 아래의 OnSceneGUI이다.  
+
+```
+        private void OnSceneGUI()
+        {
+            if(!targetCamera || !targetCamera.Target) return;
+
+            Transform cameraTarget = targetCamera.Target;   // 타겟의 트랜스폼을 가져온다.
+            Vector3 targetPosition = cameraTarget.position; // 타겟의 포지션을 가져온다.
+            targetPosition.y = targetCamera.lookAtHeight;   // 타겟의 높이를 가져온다.
+            
+            Handles.color = new Color(1f,0f,0f,0.15f);    // 핸들의 색상을 설정한다. (빨간색)
+            Handles.DrawSolidDisc(targetPosition, Vector3.up, targetCamera.distance);
+
+            Handles.color = new Color(0f,1f,0f,0.75f);    // 핸들의 색상을 설정한다.
+            Handles.DrawWireDisc(targetPosition, Vector3.up, targetCamera.distance);
+             
+            Handles.color = new Color(1f,0f,0f,0.5f);
+            targetCamera.distance = Handles.ScaleSlider(targetCamera.distance, targetPosition, -cameraTarget.forward, Quaternion.identity, targetCamera.distance, 0.1f);
+
+            targetCamera.distance = Mathf.Clamp(targetCamera.distance, 2f, float.MaxValue);    // 2f~ float가 가질수 있는 최대값사이의 값으로 제한.
+
+            Handles.color = new Color(0f,1f,0f,0.5f);
+            targetCamera.height = Handles.ScaleSlider(targetCamera.height, targetPosition, Vector3.up, Quaternion.identity, targetCamera.height,0.1f);
+
+            targetCamera.height = Mathf.Clamp(targetCamera.height, 2f, float.MaxValue);    // 2f~ float가 가질수 있는 최대값사이의 값으로 제한.
+
+            GUIStyle labelStyle = new GUIStyle();
+            labelStyle.fontSize = 15;
+            labelStyle.normal.textColor = Color.white;
+            labelStyle.alignment = TextAnchor.MiddleCenter;
+
+            Handles.Label(targetPosition +(-cameraTarget.forward * targetCamera.distance), "Distance", labelStyle);
+
+            labelStyle.alignment = TextAnchor.MiddleRight;
+            Handles.Label(targetPosition + (Vector3.up * targetCamera.height),"Height", labelStyle);
+
+            targetCamera.HandleCamera();
+        }
+    }
+}
+
+```  
+먼저 위에서 가져온 cameraTarget을 가져오고 변수를 만들어 cameraTarget에 저장해주고 position정보를 targetPosition이라는 Vector3에 저장해준다.
+그후 현재 카메라의 높이를 가져와서 targetPosition.y에 넣어준다.
+
+먼저 카메라와 떨어진 거리를(distance) 반지름으로하는 디스크를 카메라 끝에 넣어주고, 그 색을 0.15f의 alpha값을 가진 빨간색에 넣어준다
+그 밑에도 DrawWireDisc(원모양인데 테두리만)를 같이 추가해준다.  
+
+다음은 distance와 Height를 Scene에서 쉽게 바꿔줄수있게 grabbable 할수있는것을 추가해준다.
+그게 Handles.ScaleSlider이다.  
+여러개의 매개변수를 받는데 이는 다음과 같다.  
+* value: 슬라이더의 현재 값. 이 값은 슬라이더를 조작하여 변경된다. 이 경우 targetCamera.distance& targetCamera.heught가 현재 값으로 사용된다.  
+* position: 슬라이더가 표시될 위치. 슬라이더 핸들이 이 위치에 나타낸다.  
+* direction: 슬라이더가 조작될 방향. -cameraTarget.forward는 카메라 타겟(character)의 정면 방향을 나타내고, Vector3.up는 타켓의 윗방향으로 슬라이더가 움직이게 된다  
+* rotation: 슬라이더 핸들의 회전을 정의하는 Quaternion. Quaternion.identity는 회전을 적용하지 않는 것을 의미한다.  
+* sliderMin: 슬라이더의 최소 값이다.    
+* sliderMax: 슬라이더의 최대 값이다.    
+
+그 이후 코드들은 슬라이더에 문구를 달아주는것이다.  
+
+결과는 다음과 같다  
+![cameraEditor](./githubImage/cameraEditor.gif)  
+
+
+
+
+
 ## 공부내용.
 
 #### 1. 정적 오브젝트
@@ -472,5 +589,69 @@ transform.forward는 현재 오브젝트를 기준으로 한다. 보통 3D에서
 public class ControllerCharacter : MonoBehaviour {...}
 ```  
 이렇게 해주면 나중에 ControllerCharacter만 불러오더라도 , RequireComponent에 적은 모든 컴포넌트를 불러올 수 있다.
+
+#### 5. Light System  
+화면에 빛들은 Direct Light + Undirect Light를 합쳐서 우리들 눈에 보여진다.  
+하지만 유니티에서는 이러한 연산을 계속한다면 과부하가 심하기 때문에 Texture에 저장을 해서 사용한다. 이를 Lightmap 기법이라고 한다.  
+Unlit(빛의 영향을 받지않는 쉐이더) + Lightmap을 헤주면 빛의 영향을 받는 결과가 나온다. 즉 Direct&Undirect Light의 결과값을(Global illumination)을 용하는것을,  
+이러한 방식을 유니티에서는 베이킹(baking) 이라고 한다.  
+먼저 3D Light의 Mode에는 3가지의 옵션이 보이는데,  
+* RealTime : 실시간으로 고정된 오브젝트와 다이나믹 오브젝트에 광원효과를 주며 밑의 그림자 속성에 따라서 그림자를 생성한다 (Global illumination baking에 포함되지 않는다.) 
+* Mixed : 정적인 오브젝트에는 Light mappig, 동적인 오브젝트에는 실시간을 적용한다.
+* Baked : 정적인 오브젝트들에만 영향을 미친다.  
+
+즉 Bake된 구역들을 동적오브젝트인 character가 돌아다녀도 영향을 끼치지 못하는데, 이를 변경해주고 싶으면 추후 서술할 Light Probes를 확인한다.  
+**위에서 동적, 정적이라 설명했는데 쉽게 말하면 static의 체크 여부이다.**
+
+##### light 세팅 팁
+**던전같이 빛이 들어 오지 않는 환경은 Window -> Rendering -> Lighting -> Environment 에서 Sun Source 와 Sky Box Material를 제거함으로 구현할 수 있다**  
+**Lightmap Setting 에는 Lightmapper라는게 있다. 속성중 Enlighten은 사라질 예정이고, Progressive CPU와 Progressive GPU가 있는데, 보통 속도는 빠르지만 정밀도가 떨어지는 Progressive GPU는 개발중에
+많이 사용하고, 빌드할때는 Progress CPU로 빌드하는게 좋다.**  
+**사양이 좋은 PC에서는 세팅들을 Auto Generate해도 좋다(자동베이킹)**  
+
+##### light probe    
+light probe 또한 조명정보를 scene에 저장하는 기법이다.  
+lightmap이 표면에대한 정보를 저장한다면 light probe는 공간에 대한 정보를 저장한다. 즉 카메라로 캡처하면 이미지가 되는데 이를 큐브맵으로 저장한다.    
+다이나믹 게임오브젝트에 global illumination 효과를 주고싶을때 사용하면 좋다.  
+##### 사용법  
+Hierarchy 창에 우클릭하고 light 컴포넌트 내부에 light probe group을 눌러 생성해주면 된다.  
+누르면 정육면체 모양으로 꼭지점 위치 하나당 노드 하나가 나오는데 이 노드마다 위치에 대한 정보를 저장하고 있다.  
+
+
+##### reflextion probe  
+빛이 반사가되는 수면같은 부분에 구역을 설정해서 배치해주면 좋다.  
+
+결과는 아래와 같다  
+![light](./githubImage/light.gif)
+  
+[lighting Window 속성들을 알아보자](https://docs.unity3d.com/kr/2018.4/Manual/GlobalIllumination.html)
+
+#### 6. Terrain System  
+Terrain System은 산, 나무, 풀과같은 지형지물을 제작할때 많이 사용한다.  
+기능에 대해 알아보자.  
+![Terrain 기능](./githubImage/TerrainOption.png)  
+1. 첫번째 아이콘은 Create Neighbor Terrain으로 주변 터레인을 확장하고 싶을때 사용한다.  
+
+2. 두번째 아이콘은 Paint Terrain으로 Set Height, Paint Hole(입구 등 터레인 비울때 사용), Stamp Terrain등 옵션등이 있다.  
+그중에 Paint Texture를 사용하면 터레인에 색을 입혀줄수 있다. 아래 이미지처럼 여러 이미지를 추가한다면 다음과 같이 색을 덮을 수 있다. 값을 Material에 대한 값을 조정할 수있다.(Metalic, Smoothness...)  
+![Terrain TEXTURE](./githubImage/PaintTexture.png) ![TextureResult](./githubImage/TextureResult.png)  
+더욱 자세한 터레인 툴은 아래 링크와 같다.  
+[Paint Terrain 속성들](https://docs.unity3d.com/kr/2018.4/Manual/terrain-Tools.html)  
+
+3. 세번쨰 아이콘은 Paint Tree 아이콘이다. edit tree를 눌러주고 Add new tree를 해주면 새로운 Tree를 추가해 줄 수 있다.  
+추가해주면 뜨는 설정인 bend tree는 나무가 바람등에 미치는 영향들을 나타내는 수치값이다.  
+Tree Height옵션에서 높이를 랜덤으로 하는등 여러가지 옵션을 제공한다.  
+나무의 documentation은 아래 링크를 따른다.  
+[Terrain-tree 속성들](https://docs.unity3d.com/kr/2018.4/Manual/terrain-Trees.html)
+
+4. 네번째 아이콘은 Paint Grass 아이콘이다. 다만 트리와 다른점은 Tree는 Mesh Object였고, Grass는 Billoard Object이다.(mesh로 할순있지만 많은양의 메모리를 차지하므로 비추)  
+풀은 너무 많은 메모리를 잡아먹을 수 있으므로, edit details를 이용해 texture를 수정해주며 적용하자. Edit Details에는 건강한풀의 색상, 마른풀의 색상들을 설정해 줄수도 있다.  
+
+5. 가장 오른쪽 아이콘은 Settings 아이콘이다. 터레인크기, 트리, 풀의 흔들림 등 속성이 다양하므로 아래 링크를 참조하자.  
+[Terrain 속성](https://docs.unity3d.com/kr/2018.4/Manual/terrain-OtherSettings.html)  
+
+**외전 : 트리, 및 풀등의 움직이는 방향을 조정해주고 싶으면 Hierarchy 창에서 Wind Zone을 선택해주고 바람의 방향을 선택해주면 된다. Wind Zone은 폭발등 구현할 때에도 사용된다.**  
+
+
 
 
