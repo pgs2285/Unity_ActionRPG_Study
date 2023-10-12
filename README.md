@@ -18,6 +18,7 @@
    - [4. requirecomponent](#4-requirecomponent)
    - [5. light system (realtime, bake(lightmap, light probe...))](#5-light-system)
    - [6. Terrain System](#6-terrain-system)
+   - [7. navigation](#7-navigation)
 
 
 # Unity_ActionRPG
@@ -538,6 +539,9 @@ namespace JS.Cameras{
 
 결과는 다음과 같다  
 ![cameraEditor](./githubImage/cameraEditor.gif)  
+
+### 4. AI 구현 모델들을 알아보자.  
+1-1 FSM(Finite State Machine)
 
 
 
