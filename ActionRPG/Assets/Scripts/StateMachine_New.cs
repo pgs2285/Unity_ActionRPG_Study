@@ -55,7 +55,8 @@ public sealed class StateMachine_New<T> // 더이상 변형이 없도록 sealed�
         currentState.Update(deltaTime);
     }
 
-    public R ChangeState<R> where R : State<T> // R은 State<T>를 상속받은 클래스만 가능하다는 의미이다.
+
+    public R ChangeState<R>() where R : State<T> // R은 State<T>를 상속받은 클래스만 가능하다는 의미이다.
     // 상태가 전환되었을때를 구현할것 이므로 ,이전상태에 현재상태를 넣어주고, 현재상태를 덮어씌운다.
     {
         var newType = typeof(R);
