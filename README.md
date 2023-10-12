@@ -1,4 +1,5 @@
-# 목차
+# 목차  
+[레벨, 맵 디자인](https://watabou.itch.io/one-page-dungeon) 여기를 참조하면 좋다.  
 * [프로젝트 설명](#프로젝트-설명)
 
 * [1 이동구현](1-1-rigidbody-이동점프-및-대쉬)  
@@ -16,6 +17,8 @@
    - [3. update, fixedUpdate, lateUpdate](#3-update-fixedupdate-lateupdate)  
    - [4. requirecomponent](#4-requirecomponent)
    - [5. light system (realtime, bake(lightmap, light probe...))](#5-light-system)
+   - [6. Terrain System](#6-terrain-system)
+   - [7. navigation](#7-navigation)
 
 
 # Unity_ActionRPG
@@ -537,6 +540,9 @@ namespace JS.Cameras{
 결과는 다음과 같다  
 ![cameraEditor](./githubImage/cameraEditor.gif)  
 
+### 4. AI 구현 모델들을 알아보자.  
+1-1 FSM(Finite State Machine)
+
 
 
 
@@ -652,5 +658,16 @@ Tree Height옵션에서 높이를 랜덤으로 하는등 여러가지 옵션을 
 **외전 : 트리, 및 풀등의 움직이는 방향을 조정해주고 싶으면 Hierarchy 창에서 Wind Zone을 선택해주고 바람의 방향을 선택해주면 된다. Wind Zone은 폭발등 구현할 때에도 사용된다.**  
 
 
+#### 7. Navigation  
+기본적인 NavMesh는 위에 캐릭터 이동을 하면서 알아 보았고, 여기서는 다른 기능들을 알아보자  
+1.Off Mesh Link  
+흔히 말하는 점프를 할때 사용된다. OffMeshLink를 Component에 넣어주고 시작지점과, 끝나는 지점을 선택해주면, 캐릭터가 이동할때 해당 지점을 통해 점프를 하여 이동한다.
+**Navigation->Bake할때 Gernerated Off Mesh Links 에서 Drop Height와 Jump Distance를 값을 잘 지정해주면 알아서 Off Mesh Link를 생성해준다.**  
+[OffMeshLink 속성 및 설명](https://docs.unity3d.com/kr/530/Manual/class-OffMeshLink.html)  
+
+2. Nav Mesh Obstalce   
+동적인 장애물을 만들어줄때 사용한다. 한 Object에 이 컴포넌트를 달아주면 자동으로 이동할 수 없는 장애물이 된다. 부하를 줄여주려면, Carve를 체크하고, Time To stationary를 줄여주면된다. 세부 컴포넌트 구조는 아래 링크와 같다.  
+[nav mesh obstacle](https://docs.unity3d.com/kr/560/Manual/class-NavMeshObstacle.html)  
+특정 아이템을 먹었을때 문이 열린다든지의 레벨을 구현할때 사용할 수 있다.
 
 
