@@ -621,7 +621,9 @@ public sealed class StateMachine_New<T> // 더이상 변형이 없도록 sealed�
 }
 
 ```  
-이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.
+이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.  
+먼저 Animator를 구성해준다. 간단하게 Idle, Attack, Move로만 구성해 주었다.  
+
 
 1-2 Behaviour Model
 AI가 행동에따른 결정흐름을 직관적으로 나타내기 가능. 행동에 대한 모델이 state가 아닌 task로 이루어져 있다. 각 노드는 task이며 부모와 자식으로 구성된 tree로 표현이 된다.  
