@@ -21,7 +21,7 @@ public abstract class State<T> // generic 클래스로 C++에서의 템플릿과
     }
     public virtual void OnInitialized() { } // virtual은 상속받은 클래스에서 재정의 할 수 있다는 의미이다.
     public virtual void OnEnter() { }
-    public abstract void Update(float deltaTime) { } // 반드시 구현해야함.
+    public abstract void Update(float deltaTime); // 반드시 구현해야함.
     public virtual void OnExit() {}
 }
 public sealed class StateMachine_New<T> // 더이상 변형이 없도록 sealed사용
