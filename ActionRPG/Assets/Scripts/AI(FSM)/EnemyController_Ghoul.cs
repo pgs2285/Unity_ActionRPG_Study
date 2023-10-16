@@ -1,11 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 public class EnemyController_Ghoul : MonoBehaviour
 {
     #region Variables
     protected StateMachine_New<EnemyController_Ghoul> stateMachine;
+    public StateMachine_New<EnemyController_Ghoul> StateMachine => stateMachine;
 
     public LayerMask targetMask;
     public Transform target;
@@ -53,6 +56,16 @@ public class EnemyController_Ghoul : MonoBehaviour
         return target;
     }
 
+    private void OnDrawGizmos()     // 캐릭터의 범위를 표시해준다.
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, viewRadius);
+        Handles.Label(transform.position + viewRadius * Vector3.up, "캐릭터 인식 범위");
+        
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, AttackRange);
+        Handles.Label(transform.position + AttackRange * Vector3.up, "캐릭터 공격 범위");
+    }   
     #endregion Other Methods
 
     
