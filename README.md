@@ -10,7 +10,7 @@
     - [1-3. Character Controller 에 NavMesh 결합하기](#1-3-character-controller-에-navmesh-결합하기)
     - [캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)
     - [3. 카메라 에디터로 확장하기](#3-카메라-에디터로-확장하기)
-    - [4. AI 구현 모델들을 알아보자.](#4-ai-구현-모델들을-알아보자)
+    - [4. AI 구현 모델들을 알아보자(FSM,BehaviourTree).](#4-ai-구현-모델들을-알아보자) 	
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
     - [2. Vector \& transform](#2-vector--transform)
@@ -580,9 +580,9 @@ FSM Machine은 처음에 초기화를 하면서 State Machine에 상태들을 �
 https://github.com/pgs2285/Unity_ActionRPG/blob/8f13a63b90fc461f89f762df23f6b0264484489d/ActionRPG/Assets/Scripts/StateMachine_New.cs#L1-L78  
 이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.  
 먼저 구현하고 싶은 몬스터와 애니메이션을 구해주고 animator를 알아서 구성해주자. 위에서 만든 FSM을 이용해 State를 등록할것이다.   
-해당 State는 위 FSM을 상속하고 Update, OnEnter, OnExit... 등을 구현해(virtual, abstract라서 상속시 구현해야함) 원하는 상황일때 바꿔줄 것이다. 아래는 구현중 일부인 IdleState에 대한 예시이다.  
+**해당 State는 위 FSM을 상속하고 Update, OnEnter, OnExit... 등을 구현해(virtual, abstract라서 상속시 구현해야함) 원하는 상황일때 바꿔줄 것이다.** 아래는 구현중 일부인 IdleState에 대한 예시이다.  
 https://github.com/pgs2285/Unity_ActionRPG/blob/0fed87957cb04254b0e48701e259ebbf8e8b297a/ActionRPG/Assets/Scripts/AI(FSM)/IdleState.cs#L5-L46
-이후 세부코드들은 Scripts/AI(FSM)/*을 참조한다.  
+이후 세부코드들은 Scripts/AI(FSM)/*을 참조한다.    
 결과는 다음과 같다.  
 ![FSM_AI_enemy](./githubImage/AI_FSM.gif)
 
