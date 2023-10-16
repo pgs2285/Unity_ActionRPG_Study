@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State<EnemyConyroller_Ghoul>
+public class IdleState : State<EnemyController_Ghoul>
 {
     private Animator animator;
     private CharacterController controller;
@@ -16,6 +16,7 @@ public class IdleState : State<EnemyConyroller_Ghoul>
     }
 
     public override void OnEnter(){
+        Debug.Log("IdleState");
         animator?.SetBool(hasMove, false); // ?. 는 null이 아닐때만 실행해준다.
         animator?.SetFloat(hasMoveSpeed, 0.0f);
         controller?.Move(Vector3.zero);
