@@ -573,7 +573,7 @@ namespace JS.Cameras{
 
 ### 4. AI 구현 모델들을 알아보자.
 
-1-1 FSM(Finite State Machine)  
+#### 1-1 FSM(Finite State Machine)  
 상태의 흐름을 나타내고 제어하는것. 상태의 전환 즉 transition을 직관적으로 나타낸다. 한번에 하나의 상태만 수행할 수 있으므로, 다음 상태를 수행하려면 이전 상태를 종료해야한다.  
 FSM Machine은 처음에 초기화를 하면서 State Machine에 상태들을 등록하는 것으로 시작한다. 그후 초기상태에서 시작한 이후, AI를 수행하며 각 state machine에서 transition을 수행한다.  
 아래부터는 C# 의 Generic문법을 활용해 FSM을 구현 할 것이다.  
@@ -586,7 +586,7 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/0fed87957cb04254b0e48701e259ebbf
 결과는 다음과 같다.  
 ![FSM_AI_enemy](./githubImage/AI_FSM.gif)
 
-1-2 Behaviour Model
+#### 1-2 Behaviour Model  
 AI가 행동에따른 결정흐름을 직관적으로 나타내기 가능. 행동에 대한 모델이 state가 아닌 task로 이루어져 있다. 각 노드는 task이며 부모와 자식으로 구성된 tree로 표현이 된다.  
 제어 흐름이 왼쪽에서 오른쪽으로 간다.  
 behavior tree의 node는 크게 4가지로 나눌수있다.
