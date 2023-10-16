@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State<EnemyConyroller_Ghoul>
+public class IdleState : State<EnemyController_Ghoul>
 {
     private Animator animator;
     private CharacterController controller;

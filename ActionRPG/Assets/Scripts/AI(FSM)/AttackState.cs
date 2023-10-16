@@ -2,17 +2,28 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : MonoBehaviour
+public class AttackState : State<EnemyController_Ghoul>
 {
-    // Start is called before the first frame update
-    void Start()
+    #region Variables
+    private Animator animator;
+    private int hashAttack = Animator.StringToHash("Attack");
+    private int hashAttackIndex = Animator.StringToHash("AttackIndex");
+    #endregion Variables
+
+    #region Methods
+    public override void OnInitialized()
     {
-        
+        animator = context.GetComponent<Animator>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public override void OnEnter()
     {
-        
+        if(context.IsAvailableAttack)
+        {
+            animator?.SetTrigger(hashAttack);
+        }else{
+            stateMachine.ChangeState<IdleState>();
+        }
     }
+    #endregion Methods
 }
