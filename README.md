@@ -581,9 +581,9 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/8f13a63b90fc461f89f762df23f6b026
 이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.  
 먼저 구현하고 싶은 몬스터와 애니메이션을 구해주고 animator를 알아서 구성해주자. 위에서 만든 FSM을 이용해 State를 등록할것이다.   
 해당 State는 위 FSM을 상속하고 Update, OnEnter, OnExit... 등을 구현해(virtual, abstract라서 상속시 구현해야함) 원하는 상황일때 바꿔줄 것이다. 아래는 구현중 일부인 IdleState에 대한 예시이다.  
-```csharp
+[```csharp
 
-```  
+```  ](https://github.com/pgs2285/Unity_ActionRPG/blob/0fed87957cb04254b0e48701e259ebbf8e8b297a/ActionRPG/Assets/Scripts/AI(FSM)/IdleState.cs)#L5-L46
 이후 세부코드들은 Scripts/AI(FSM)/*을 참조한다.  
 결과는 다음과 같다.  
 ![FSM_AI_enemy](./githubImage/AI_FSM.gif)
