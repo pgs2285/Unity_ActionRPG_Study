@@ -16,6 +16,11 @@ public class AttackState : State<EnemyController_Ghoul>
         animator = context.GetComponent<Animator>();
     }
 
+    public override void Update(float deltaTime)
+    {
+        
+    }
+
     public override void OnEnter()
     {
         if(context.IsAvailableAttack)

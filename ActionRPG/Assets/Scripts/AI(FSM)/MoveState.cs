@@ -25,6 +25,7 @@ public class MoveState : State<EnemyController_Ghoul>
 
     public override void OnEnter()
     {
+        Debug.Log("MoveState");
         agent?.SetDestination(context.target.position);
         animator?.SetBool(moveHash,true);
     }
