@@ -602,6 +602,7 @@ behavior tree의 node는 크게 4가지로 나눌수있다.
 ![FOV](./githubImage/FOV.png)  
 캐릭터의 시야를 구현하기 위해서 새로운 스크립트를 생성해준다.  
 스크립트는 아래와 같다.  
+https://github.com/pgs2285/Unity_ActionRPG/blob/f4c4f19943198bf820b67c75cf400b263eec6a53/ActionRPG/Assets/Scripts/AI(FSM)/FieldOfView.cs#L5-L61  
 주석으로 적어두었지만, 다시한번 간단하게 분석하자면, 현재 캐릭터 주변으로 감지할 범위만큼의 Sphere을 생성해주고, 타겟과 나의 방향벡터를 구한다.  
 그 후 Vector3.Angle을 통해서 viewRadius / 2 만큼의 각도 내에 있는지 확인한다.  
 위 이미지 처럼 자기 중심을 기준으로 좌우 절대값의 각도를 구해 비교하기 위해선, viewRadius / 2가 필요하다.  
