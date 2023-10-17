@@ -13,7 +13,9 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     public LayerMask obstacleMask;    // 장애물 뒤에 있는 타겟은 볼 수 없으므로, 장애물 레이어를 추가한다.
     
-    public List<Transform> visibleTargets = new List<Transform>();      // 시야에 들어온 타겟을 리스트에 추가한다.
+    private List<Transform> visibleTargets = new List<Transform>();      // 시야에 들어온 타겟을 리스트에 추가한다.
+    public List<Transform> VisibleTargets => visibleTargets;
+    
     public Transform nearestTarget = null;    // 가장 가까운 타겟을 저장한다.
     private float distanceToTarget = 0f;      // 가장 가까운 타겟과의 거리를 저장한다.
 
@@ -58,4 +60,17 @@ public class FieldOfView : MonoBehaviour
         findVisibleTarget();
     }
     #endregion Unity Methods
+    
+    #region etc
+    public Vector3 DirFromAngle(float angleInDegree, bool angleIsGlobal)
+    {
+        if (!angleIsGlobal)
+        {
+            angleInDegree += transform.position.y; 
+            // 글로벌 값을 사용할때는 y값을 그냥 두고, 로컬값을 사용할땐 y값을 더해준다.
+        }
+
+        return new Vector3(Mathf.Sin( angleInDegree * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegree * Mathf.Deg2Rad));
+    }
+    #endregion etc
 }
