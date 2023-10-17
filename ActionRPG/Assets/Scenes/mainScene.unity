@@ -541,11 +541,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b307689181f4c4e46acfb7a77f1addfd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetMask:
-    serializedVersion: 2
-    m_Bits: 64
-  target: {fileID: 0}
-  viewRadius: 5.84
   AttackRange: 1.51
 --- !u!95 &391374426
 Animator:
@@ -601,15 +596,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9037c1b3b8d07429a894ea4a961f467e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 5
-  viewAngle: 90
+  viewRadius: 5.18
+  viewAngle: 97
   targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
-  nearestTarget: {fileID: 0}
+    m_Bits: 128
+  delay: 0.2
 --- !u!1 &399037380
 GameObject:
   m_ObjectHideFlags: 0
@@ -765,6 +760,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 3519aebe6cd1639499f8a7d1adff928a, type: 3}
   m_PrefabInstance: {fileID: 1499242204}
   m_PrefabAsset: {fileID: 0}
+--- !u!136 &468138215
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 468138209}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &500291746
 GameObject:
   m_ObjectHideFlags: 0
@@ -812,7 +821,7 @@ GameObject:
   - component: {fileID: 634862411}
   - component: {fileID: 634862410}
   - component: {fileID: 634862409}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -890,7 +899,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 634862408}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.021549225, y: 2.42, z: -7.2932587}
+  m_LocalPosition: {x: 0.98, y: 2.42, z: -7.2932587}
   m_LocalScale: {x: 3, y: 3, z: 3}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3599,7 +3608,7 @@ GameObject:
   - component: {fileID: 1950136360}
   - component: {fileID: 1950136359}
   - component: {fileID: 1950136358}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Cube (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

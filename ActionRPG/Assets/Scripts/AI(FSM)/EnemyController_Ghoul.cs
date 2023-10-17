@@ -9,11 +9,9 @@ public class EnemyController_Ghoul : MonoBehaviour
     #region Variables
     protected StateMachine_New<EnemyController_Ghoul> stateMachine;
     public StateMachine_New<EnemyController_Ghoul> StateMachine => stateMachine;
-
-    public LayerMask targetMask;
-    public Transform target;
-    public float viewRadius;
     public float AttackRange;
+    private FieldOfView fov; 
+    public Transform target => fov?.NearestTarget;
 
     #endregion Variables
 
@@ -23,6 +21,9 @@ public class EnemyController_Ghoul : MonoBehaviour
         stateMachine = new StateMachine_New<EnemyController_Ghoul>(this, new IdleState());
         stateMachine.AddState(new MoveState());
         stateMachine.AddState(new AttackState());
+
+        fov = GetComponent<FieldOfView>();
+
     }
 
     private void Update()
@@ -45,27 +46,19 @@ public class EnemyController_Ghoul : MonoBehaviour
     }
     public Transform SearchEnemy()
     {
-        target = null;
-
-        Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask); // 캐릭터를 중심으로 viewRadius만큼의 반경안에 있는 targetMsk를rkwls 콜라이더를 모두 가져온다.
-        // layerMask 는 검사할때 부하를 줄여주기때문에 사용하는게 좋다.
-        if(targetInViewRadius.Length > 0)
-        {
-            target = targetInViewRadius[0].transform.transform;
-        }
         return target;
     }
 
-    private void OnDrawGizmos()     // 캐릭터의 범위를 표시해준다.
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, viewRadius);
-        Handles.Label(transform.position + viewRadius * Vector3.up, "캐릭터 인식 범위");
+    // private void OnDrawGizmos()     // 캐릭터의 범위를 표시해준다.
+    // {
+    //     Gizmos.color = Color.red;
+    //     Gizmos.DrawWireSphere(transform.position, viewRadius);
+    //     Handles.Label(transform.position + viewRadius * Vector3.up, "캐릭터 인식 범위");
         
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, AttackRange);
-        Handles.Label(transform.position + AttackRange * Vector3.up, "캐릭터 공격 범위");
-    }   
+    //     Gizmos.color = Color.blue;
+    //     Gizmos.DrawWireSphere(transform.position, AttackRange);
+    //     Handles.Label(transform.position + AttackRange * Vector3.up, "캐릭터 공격 범위");
+    // }   
     #endregion Other Methods
 
     
