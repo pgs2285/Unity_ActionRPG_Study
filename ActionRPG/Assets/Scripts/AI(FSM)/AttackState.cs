@@ -7,7 +7,7 @@ public class AttackState : State<EnemyController_Ghoul>
     #region Variables
     private Animator animator;
     private int hashAttack = Animator.StringToHash("Attack");
-    private int hashAttackIndex = Animator.StringToHash("AttackIndex");
+    // private int hashAttackIndex = Animator.StringToHash("AttackIndex");
     #endregion Variables
 
     #region Methods

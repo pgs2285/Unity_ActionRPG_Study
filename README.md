@@ -10,7 +10,7 @@
     - [1-3. Character Controller 에 NavMesh 결합하기](#1-3-character-controller-에-navmesh-결합하기)
     - [캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)
     - [3. 카메라 에디터로 확장하기](#3-카메라-에디터로-확장하기)
-    - [4. AI 구현 모델들을 알아보자.](#4-ai-구현-모델들을-알아보자)
+    - [4. AI 구현 모델들을 알아보자(FSM,BehaviourTree).](#4-ai-구현-모델들을-알아보자) 	
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
     - [2. Vector \& transform](#2-vector--transform)
@@ -23,6 +23,7 @@
       - [reflextion probe](#reflextion-probe)
     - [6. Terrain System](#6-terrain-system)
     - [7. Navigation](#7-navigation)
+    - [8. GetComponent에 대한 오해(나만...?)](#8-getcomponent에-대한-오해나만)
 
 # Unity_ActionRPG
 
@@ -572,14 +573,21 @@ namespace JS.Cameras{
 
 ### 4. AI 구현 모델들을 알아보자.
 
-1-1 FSM(Finite State Machine)  
+#### 1-1 FSM(Finite State Machine)  
 상태의 흐름을 나타내고 제어하는것. 상태의 전환 즉 transition을 직관적으로 나타낸다. 한번에 하나의 상태만 수행할 수 있으므로, 다음 상태를 수행하려면 이전 상태를 종료해야한다.  
 FSM Machine은 처음에 초기화를 하면서 State Machine에 상태들을 등록하는 것으로 시작한다. 그후 초기상태에서 시작한 이후, AI를 수행하며 각 state machine에서 transition을 수행한다.  
 아래부터는 C# 의 Generic문법을 활용해 FSM을 구현 할 것이다.  
 https://github.com/pgs2285/Unity_ActionRPG/blob/8f13a63b90fc461f89f762df23f6b0264484489d/ActionRPG/Assets/Scripts/StateMachine_New.cs#L1-L78  
-이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.
+이제 위에서 구현한 FSM 모델을 가지고 캐릭터 AI를 구현해보자.  
+먼저 구현하고 싶은 몬스터와 애니메이션을 구해주고 animator를 알아서 구성해주자. 위에서 만든 FSM을 이용해 State를 등록할것이다.   
+**해당 State는 위 FSM을 상속하고 Update, OnEnter, OnExit... 등을 구현해(virtual, abstract라서 상속시 구현해야함) 원하는 상황일때 바꿔줄 것이다.** 아래는 구현중 일부인 IdleState에 대한 예시이다.  
+https://github.com/pgs2285/Unity_ActionRPG/blob/0fed87957cb04254b0e48701e259ebbf8e8b297a/ActionRPG/Assets/Scripts/AI(FSM)/IdleState.cs#L5-L46
+> **이후 세부코드들은 Scripts/AI(FSM)/*을 참조한다.**
 
-1-2 Behaviour Model
+결과는 다음과 같다.  
+![FSM_AI_enemy](./githubImage/AI_FSM.gif)
+
+#### 1-2 Behaviour Model  
 AI가 행동에따른 결정흐름을 직관적으로 나타내기 가능. 행동에 대한 모델이 state가 아닌 task로 이루어져 있다. 각 노드는 task이며 부모와 자식으로 구성된 tree로 표현이 된다.  
 제어 흐름이 왼쪽에서 오른쪽으로 간다.  
 behavior tree의 node는 크게 4가지로 나눌수있다.
@@ -728,3 +736,15 @@ Terrain System은 산, 나무, 풀과같은 지형지물을 제작할때 많이 
    동적인 장애물을 만들어줄때 사용한다. 한 Object에 이 컴포넌트를 달아주면 자동으로 이동할 수 없는 장애물이 된다. 부하를 줄여주려면, Carve를 체크하고, Time To stationary를 줄여주면된다. 세부 컴포넌트 구조는 아래 링크와 같다.  
    [nav mesh obstacle](https://docs.unity3d.com/kr/560/Manual/class-NavMeshObstacle.html)  
    특정 아이템을 먹었을때 문이 열린다든지의 레벨을 구현할때 사용할 수 있다.
+
+#### 8. GetComponent에 대한 오해(나만...?)
+이거는 약간 해프닝 같은건데 나는 GetComponent가 GameObject들만 사용할 수 있는줄 알았다...  
+``` csharp
+    override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
+    {
+        animator.GetComponent<EnemyController_Ghoul>()?.StateMachine.ChangeState<IdleState>();      
+    }
+```   
+이 코드를 보고 찾아보니 Monobehaviour를 상속받은 모든것들은 GetComponent와 같은것을 사용 할 수 있더라.  
+즉 해당 animator가 붙은 오브젝트에 EnemyController_Ghoul에 들어가는 것이다.  
+  
