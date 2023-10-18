@@ -607,6 +607,13 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/f4c4f19943198bf820b67c75cf400b26
 그 후 Vector3.Angle을 통해서 viewRadius / 2 만큼의 각도 내에 있는지 확인한다.  
 위 이미지 처럼 자기 중심을 기준으로 좌우 절대값의 각도를 구해 비교하기 위해선, viewRadius / 2가 필요하다.  
 마지막으로 타겟에게 Ray를 쏴서 만약 중간에 Obstacle Layer가 검출되지 않으면 내 시야각에 있는 Object이므로 List에 추가해주면 끝난다.  
+에디터를 구현하는 과정에서 sin, cos등을 이용해 좌표값을 구하는 과정을 통해 수학의 중요성을 알게되더라...   
+https://github.com/pgs2285/Unity_ActionRPG/blob/459f258c407ce3ca93ed3cf873a8a66d3f60adaf/ActionRPG/Assets/Scripts/AI(FSM)/FieldOfView_Editor.cs#L4-L40 
+sin,cos로 좌표를 구하기만하고 사용하지 않은것은 방향벡터를 구해서 반지름을 곱해주는 방식이 더 낫다 생각했기 때문에 좌표만 연습삼아 구해본것이다.  
+실제 DirFromAngle은 *new Vector3(Mathf.Sin( angleInDegree * Mathf.Deg2Rad), 0, Mathf.Cos(angleInDegree * Mathf.Deg2Rad));* 을 return한다.  
+최종적으로 구현한 FOV는 다음과 같다. 이전에 위에서 보여준 gif와 다른점은 설정한 시야각 범위에 들어와있을때만 추적한다는 점, 장애물 뒤에 숨으면 추적을 멈춘다는 점이다.  
+
+![FOV_Result](./githubImage/FOV_Result.gif)  
 
 ## 공부내용.
 
