@@ -42,14 +42,17 @@ public class FieldOfView : MonoBehaviour
         distanceToTarget = 0f;
 
         Collider[] targetInViewRadius = Physics.OverlapSphere(transform.position, viewRadius, targetMask); // 시야 반경 내에 있는 타겟을 배열에 저장한다.
+        Debug.Log("감지범위 : "+targetInViewRadius.Length);
         for (int i = 0; i < targetInViewRadius.Length; ++i)
         {
             Transform target = targetInViewRadius[i].transform;
             Vector3 dirToTarget = (target.position - transform.position).normalized; // 타겟과 자신의 위치를 빼고, 정규화하면, 자신과 타겟 사이의 방향 벡터가 된다.
             // 방항벡터값 = 목표벡터 - 현재벡터
-            if (Vector3.Angle(transform.forward, dirToTarget) < (viewRadius / 2)) // 현재 캐릭터가 바라보는 방향벡터와, 위에서 타겟까지의 방향벡터의 각도를 구하고, 그것이 시야각의  / 2 보다 작다면 
+            Debug.Log("Angle : " + Vector3.Angle(transform.forward, dirToTarget));
+            if (Vector3.Angle(transform.forward, dirToTarget) < (viewAngle / 2)) // 현재 캐릭터가 바라보는 방향벡터와, 위에서 타겟까지의 방향벡터의 각도를 구하고, 그것이 시야각의  / 2 보다 작다면 
             // 나누기 2 하는 이유는 기준으로 좌우 절대값으로 구하려 하기 때문이다.
             {
+                Debug.Log("FOV 범위 : "+targetInViewRadius.Length);
                 float distToTarget = Vector3.Distance(transform.position, target.position); // 자신과 타겟 사이의 거리를 구한다.
                 if (!Physics.Raycast(transform.position, target.position, distToTarget, obstacleMask)) // 내 위치에서 타겟까지 distToTarget만큼의 Ray를 쐈을때 장애물이 검출되지 않으면,
                 { // 이 조건을 최종 통과하면 타겟은 자신의 시야안에 존재한다.
