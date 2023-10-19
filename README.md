@@ -10,7 +10,12 @@
     - [1-3. Character Controller 에 NavMesh 결합하기](#1-3-character-controller-에-navmesh-결합하기)
     - [캐릭터 모델링 및 애니메이션 구현](#캐릭터-모델링-및-애니메이션-구현)
     - [3. 카메라 에디터로 확장하기](#3-카메라-에디터로-확장하기)
-    - [4. AI 구현 모델들을 알아보자(FSM,BehaviourTree).](#4-ai-구현-모델들을-알아보자) 	
+    - [4. AI 구현 모델들을 알아보자(FSM,BehaviourTree).](#4-ai-구현-모델들을-알아보자)  
+        -[4-1.FOM](#1-1-fsmfinite-state-machine)  
+        -[4-2.Behaviour Tree 이론](#1-2-behaviour-model)  
+        -[4-3.FOV(FieldOfView) 시야 구현하기](#1-3-시야field-of-view-구현하기)  
+        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)  
+   		
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
     - [2. Vector \& transform](#2-vector--transform)
@@ -631,10 +636,10 @@ sin,cos로 좌표를 구하기만하고 사용하지 않은것은 방향벡터�
         return wayPointTarget;
     }
 ```  
-그후 새로운 State를 제작해서 상태에 등록해준다.  
-(코드탑재)
+그후 새로운 State를 제작해서 상태에 등록해준다.    
+https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846af0acc0ee/ActionRPG/Assets/Scripts/AI(FSM)/MoveToWayPoints.cs#L6-L70
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
-![FOV_FINAL](FOV_FINAL.gif)  
+![FOV_FINAL](./githubImage/FOV_FINAL.gif)  
 
 
 ## 공부내용.
