@@ -634,7 +634,7 @@ sin,cos로 좌표를 구하기만하고 사용하지 않은것은 방향벡터�
 그후 새로운 State를 제작해서 상태에 등록해준다.    
 https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846af0acc0ee/ActionRPG/Assets/Scripts/AI(FSM)/MoveToWayPoints.cs#L6-L70
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
-![FOV_FINAL](FOV_FINAL.gif)  
+![FOV_FINAL](./githubImage/FOV_FINAL.gif)  
 
 
 ## 공부내용.
