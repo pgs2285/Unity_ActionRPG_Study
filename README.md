@@ -611,6 +611,7 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/f4c4f19943198bf820b67c75cf400b26
 최종적으로 구현한 FOV는 다음과 같다. 이전에 위에서 보여준 gif와 다른점은 설정한 시야각 범위에 들어와있을때만 추적한다는 점, 장애물 뒤에 숨으면 추적을 멈춘다는 점이다.  
 ![FOV_Result](./githubImage/FOV_Result.gif)  
 
+
 ## 공부내용.
 
 #### 1. 정적 오브젝트
