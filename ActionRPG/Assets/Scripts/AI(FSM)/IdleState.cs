@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class IdleState : State<EnemyController_Ghoul>
 {
+    public bool isPatrol = true;
+    private float minIdleTime= 0.0f;
+    private float maxIdleTime = 3.0f;
+    private float idleTime;
     private Animator animator;
     private CharacterController controller;
 
@@ -13,6 +17,10 @@ public class IdleState : State<EnemyController_Ghoul>
     {
         animator = context.GetComponent<Animator>();
         controller = context.GetComponent<CharacterController>();
+        if (isPatrol)
+        {
+            idleTime = Random.Range(minIdleTime, maxIdleTime);
+        }
     }
 
     public override void OnEnter(){
@@ -20,6 +28,7 @@ public class IdleState : State<EnemyController_Ghoul>
         animator?.SetBool(hasMove, false); // ?. 는 null이 아닐때만 실행해준다.
         // animator?.SetFloat(hasMoveSpeed, 0.0f);
         controller?.Move(Vector3.zero);
+        
     }
 
     public override void Update(float deltaTime)
@@ -36,6 +45,9 @@ public class IdleState : State<EnemyController_Ghoul>
             {
                 stateMachine.ChangeState<MoveState>();
             }
+        }else if (isPatrol && stateMachine.ElapsedTimeInState > idleTime)   // 일정시간 대기하기 위해서
+        {
+            stateMachine.ChangeState<MoveToWayPoints>();
         }
     }
 

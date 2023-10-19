@@ -615,6 +615,28 @@ sin,cos로 좌표를 구하기만하고 사용하지 않은것은 방향벡터�
 
 ![FOV_Result](./githubImage/FOV_Result.gif)  
 
+#### 1-4 Patrol 상태의 적 만들기(확장)  
+먼저 기존의 EnemyController에 이동할 위치를 찾는 함수를 만들어주자.  
+```csharp
+# Assets/Scripts/AI(FSM)/EnemyController_Ghoul.cs : L64-74
+    public Transform FindNextWayPoint()
+    {
+        wayPointTarget = null;
+        if(waypoints.Length > 0)
+        {
+            wayPointTarget = waypoints[wayPointIndex];
+        }
+
+        wayPointIndex = (wayPointIndex + 1) % waypoints.Length;  //cycling
+        return wayPointTarget;
+    }
+```  
+그후 새로운 State를 제작해서 상태에 등록해준다.  
+(코드탑재)
+결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
+![FOV_FINAL](FOV_FINAL.gif)  
+
+
 ## 공부내용.
 
 #### 1. 정적 오브젝트
