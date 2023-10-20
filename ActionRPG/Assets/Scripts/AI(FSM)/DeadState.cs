@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class DeadState : State<EnemyController_Ghoul>
+public class DeadState : State<EnemyController>
 {
     private Animator _animator;
     private int _isAliveHash = Animator.StringToHash("IsAlive");

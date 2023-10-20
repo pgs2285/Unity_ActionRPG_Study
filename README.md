@@ -797,4 +797,8 @@ Terrain System은 산, 나무, 풀과같은 지형지물을 제작할때 많이 
 ```   
 이 코드를 보고 찾아보니 Monobehaviour를 상속받은 모든것들은 GetComponent와 같은것을 사용 할 수 있더라.  
 즉 해당 animator가 붙은 오브젝트에 EnemyController_Ghoul에 들어가는 것이다.  
+
+#### 9. delegate  
+c#의 강력한 기능중에 하나이나, 직접쓰기 전까지는 왜 사용하는지 모르는 것 들중 대표적인거 같다.  
+
   

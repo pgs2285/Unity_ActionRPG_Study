@@ -11,7 +11,7 @@ public class AttackStateMachineBehaviour : StateMachineBehaviour
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         animator.gameObject.GetComponent<AttackStateController>()?.OnEndOfAttackState();
-        animator.GetComponent<EnemyController_Ghoul>()?.StateMachine.ChangeState<IdleState>();
+        animator.GetComponent<EnemyController>()?.stateMachine.ChangeState<IdleState>();
         
     }
 }

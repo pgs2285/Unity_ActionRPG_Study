@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class IdleState : State<EnemyController_Ghoul>
+public class IdleState : State<EnemyController>
 {
     public bool isPatrol = true;
     private float minIdleTime= 0.0f;
@@ -33,7 +33,7 @@ public class IdleState : State<EnemyController_Ghoul>
 
     public override void Update(float deltaTime)
     {
-        Transform enemy = context.SearchEnemy();    // 적을 찾는다.
+        Transform enemy = context.Target;    // 적을 찾는다.
         if(enemy != null)
         // 적을 찾아보고 공격이 가능하다면 -> Attack,
         // 적을 찾아보고 공격이 불가능하다면 -> Move,
@@ -45,9 +45,6 @@ public class IdleState : State<EnemyController_Ghoul>
             {
                 stateMachine.ChangeState<MoveState>();
             }
-        }else if (isPatrol && stateMachine.ElapsedTimeInState > idleTime)   // 일정시간 대기하기 위해서
-        {
-            stateMachine.ChangeState<MoveToWayPoints>();
         }
     }
 
