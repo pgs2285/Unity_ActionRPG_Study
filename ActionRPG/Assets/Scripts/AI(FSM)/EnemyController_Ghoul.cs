@@ -15,11 +15,27 @@ using UnityEngine;
 
         private int hitTriggerHash = Animator.StringToHash("HitTrigger");
         private int isAliveHash = Animator.StringToHash("IsAlive");
+        // public bool isAvailableAttack = true;
 
         #endregion Variables
 
         #region Proeprties
-        
+            
+        public override bool IsAvailableAttack
+        {
+            get
+            {
+                if (!Target)
+                {
+                    return false;
+                }
+
+                float distance = Vector3.Distance(transform.position, Target.position);
+                return (distance <= AttackRange);
+            }
+        }
+
+    
 
         #endregion Properties
 
@@ -34,30 +50,10 @@ using UnityEngine;
             stateMachine.AddState(new DeadState());
 
             health = maxHealth;
+            InitAttackBehaviour();
 
         }
 
-        private void OnAnimatorMove()
-        {
-            // Follow NavMeshAgent
-            //Vector3 position = agent.nextPosition;
-            //animator.rootPosition = agent.nextPosition;
-            //transform.position = position;
-
-            // Follow CharacterController
-            Vector3 position = transform.position;
-            position.y = agent.nextPosition.y;
-
-            animator.rootPosition = position;
-            agent.nextPosition = position;
-
-            // Follow RootAnimation
-            //Vector3 position = animator.rootPosition;
-            //position.y = agent.nextPosition.y;
-
-            //agent.nextPosition = position;
-            //transform.position = position;
-        }
 
         #endregion Unity Methods
 
@@ -111,7 +107,43 @@ using UnityEngine;
 
         public void OnExecuteAttack(int attackIndex)
         {
+        if(CurrentAttackBehaviour != null)
+            {
+                CurrentAttackBehaviour.ExecuteAttack(Target.gameObject, hitPoint);
+            }
+            
+        }
 
+        private void InitAttackBehaviour()
+        {
+            foreach (AttackBehaviour behaviour in attackBehaviours)
+            {
+                if (CurrentAttackBehaviour == null)
+                {
+                    CurrentAttackBehaviour = behaviour;
+                }
+
+                behaviour.targetMask = TargetMask;
+            }
+        }
+
+        private void CheckAttackBehaviour()
+        {
+            if (CurrentAttackBehaviour == null || !CurrentAttackBehaviour.isAvailable)
+            {
+                CurrentAttackBehaviour = null;
+
+                foreach (AttackBehaviour behaviour in attackBehaviours)
+                {
+                    if (behaviour.isAvailable)
+                    {
+                        if ((CurrentAttackBehaviour == null) || (CurrentAttackBehaviour.priority < behaviour.priority))
+                        {
+                            CurrentAttackBehaviour = behaviour;
+                        }
+                    }
+                }
+            }
         }
 
         #endregion IAttackable Interfaces
