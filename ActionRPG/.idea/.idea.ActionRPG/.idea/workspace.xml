@@ -5,7 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4b24ed90-68ae-40ed-b57c-11aca134f475" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/AI(FSM)/FieldOfView.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/AI(FSM)/FieldOfView.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/AttackStateMachineBehaviour.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/AttackStateMachineBehaviour.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/_GhoulZombie/Ghoul.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/_GhoulZombie/Ghoul.controller" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +19,11 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/AI(FSM)/FieldOfView.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/AI(FSM)/MoveToWayPoints.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/BattleSystem/AttackBehaviour.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/BattleSystem/AttackStateController.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/BattleSystem/IAttackable.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/6b650a6edf35498a9f1065e3a7bd63c426c00/72/ac610452/StateMachineBehaviour.cs" root0="SKIP_HIGHLIGHTING" />
   </component>
   <component name="MetaFilesCheckinStateConfiguration" checkMetaFiles="true" />
   <component name="ProjectColorInfo">{
@@ -96,7 +103,7 @@
       <updated>1697515769287</updated>
       <workItem from="1697515772233" duration="225000" />
       <workItem from="1697516010824" duration="388000" />
-      <workItem from="1697516415264" duration="7144000" />
+      <workItem from="1697516415264" duration="15219000" />
     </task>
     <servers />
   </component>
