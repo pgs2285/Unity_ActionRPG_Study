@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MoveState : State<EnemyController_Ghoul>
+public class MoveState : State<EnemyController>
 
 {
     #region Variables
@@ -26,13 +26,13 @@ public class MoveState : State<EnemyController_Ghoul>
     public override void OnEnter()
     {
         Debug.Log("MoveState");
-        agent?.SetDestination(context.target.position);
+        agent?.SetDestination(context.Target.position);
         animator?.SetBool(moveHash, true);
     }
 
     public override void Update(float deltaTime)
     {
-        Transform enemy = context.SearchEnemy();
+        Transform enemy = context.Target;
         if(enemy)
         {
             agent.SetDestination(enemy.position);

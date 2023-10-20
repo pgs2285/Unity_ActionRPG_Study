@@ -639,7 +639,13 @@ sin,cos로 좌표를 구하기만하고 사용하지 않은것은 방향벡터�
 그후 새로운 State를 제작해서 상태에 등록해준다.    
 https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846af0acc0ee/ActionRPG/Assets/Scripts/AI(FSM)/MoveToWayPoints.cs#L6-L70
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
-![FOV_FINAL](./githubImage/FOV_FINAL.gif)  
+![FOV_FINAL](./githubImage/FOV_FINAL.gif)   
+
+### 5. 전투시스템을 구현해보자.
+먼저 인터페이스들을 구현해 줄것이다.  
+> 기본적으로 유니티는 다중상속을 지원하진 않지만, 인터페이스를 통해 구현해야할 요소들을 받을순 있다.  
+> IAttackable과 IDamageable을 구현할것인데 만약 적이 대미지만 입을수 있는 상태이고, 공격을 못한다면 IDamageable만 구현하는등 유연하게 사용할 수 있어, 번거롭지만 나눠서 구현한다.  
+
 
 
 ## 공부내용.
@@ -791,4 +797,8 @@ Terrain System은 산, 나무, 풀과같은 지형지물을 제작할때 많이 
 ```   
 이 코드를 보고 찾아보니 Monobehaviour를 상속받은 모든것들은 GetComponent와 같은것을 사용 할 수 있더라.  
 즉 해당 animator가 붙은 오브젝트에 EnemyController_Ghoul에 들어가는 것이다.  
+
+#### 9. delegate  
+c#의 강력한 기능중에 하나이나, 직접쓰기 전까지는 왜 사용하는지 모르는 것 들중 대표적인거 같다.  
+
   

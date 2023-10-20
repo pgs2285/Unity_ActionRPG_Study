@@ -6,7 +6,7 @@ using UnityEngine;
 public abstract class State<T> // generic 클래스로 C++에서의 템플릿과 비슷하다.
 {
     protected StateMachine_New<T> stateMachine; // StateMachine에 접근하기 위한 변수
-    protected T context; // 이 상태의 소유자에 대한 context. MonoBehaviour 의 update를 호출받기 때문에 T에는 Monobehaviour이 들어올것.
+    protected T context; 
 
     public State()
     {

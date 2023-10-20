@@ -1,84 +1,118 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
-public class EnemyController_Ghoul : MonoBehaviour
-{
-    #region Variables
 
-    public bool isPatrol;
-    protected StateMachine_New<EnemyController_Ghoul> stateMachine;
-    public StateMachine_New<EnemyController_Ghoul> StateMachine => stateMachine;
-    public float AttackRange;
-    private FieldOfView fov;
-    public Transform target => fov?.NearestTarget;
-    public Transform[] waypoints;
-    [HideInInspector] public Transform wayPointTarget;
-    private int wayPointIndex;
-
-    #endregion Variables
-
-    #region Unity Methods
-
-    void Start()
+    public class EnemyController_Ghoul : EnemyController, IAttackable, IDamageable
     {
-        stateMachine = new StateMachine_New<EnemyController_Ghoul>(this, new MoveToWayPoints());
-        stateMachine.AddState(new MoveState());
-        stateMachine.AddState(new AttackState());
-        IdleState idleState = new IdleState();
-        idleState.isPatrol = true;
-        stateMachine.AddState(new IdleState());
+        #region Variables
+        [SerializeField]
+        public Transform hitPoint;
 
-        fov = GetComponent<FieldOfView>();
+        public Transform[] waypoints;
 
-    }
+        public float maxHealth => 100f;
+        private float health;
 
-    private void Update()
-    {
-        stateMachine.Update(Time.deltaTime);
-    }
+        private int hitTriggerHash = Animator.StringToHash("HitTrigger");
+        private int isAliveHash = Animator.StringToHash("IsAlive");
 
-    #endregion Unity Methods
+        #endregion Variables
 
-    #region Other Methods
+        #region Proeprties
+        
 
-    public bool IsAvailableAttack
-    {
-        // 이런식으로 전개하는걸 property라고 한다. 아레 코드는 get만 있는 property이다.
-        get
+        #endregion Properties
+
+        #region Unity Methods
+
+        protected override void Start()
         {
-            // 이는 get만 있는 읽기 전용이므로 수정할 수 없다.
-            if (!target)
+            base.Start();
+
+            stateMachine.AddState(new MoveState());
+            stateMachine.AddState(new AttackState());
+            stateMachine.AddState(new DeadState());
+
+            health = maxHealth;
+
+        }
+
+        private void OnAnimatorMove()
+        {
+            // Follow NavMeshAgent
+            //Vector3 position = agent.nextPosition;
+            //animator.rootPosition = agent.nextPosition;
+            //transform.position = position;
+
+            // Follow CharacterController
+            Vector3 position = transform.position;
+            position.y = agent.nextPosition.y;
+
+            animator.rootPosition = position;
+            agent.nextPosition = position;
+
+            // Follow RootAnimation
+            //Vector3 position = animator.rootPosition;
+            //position.y = agent.nextPosition.y;
+
+            //agent.nextPosition = position;
+            //transform.position = position;
+        }
+
+        #endregion Unity Methods
+
+        #region Helper Methods
+        #endregion Helper Methods
+
+        #region IDamagable interfaces
+
+        public bool isAlive => (health > 0);
+
+        public void takeDamage(int damage, GameObject hitEffectPrefab)
+        {
+            if (!isAlive)
             {
-                return false;
+                return;
             }
 
-            float distance = Vector3.Distance(transform.position, target.position);
-            return (distance <= AttackRange);
+            health -= damage;
+
+
+
+            if (hitEffectPrefab)
+            {
+                Instantiate(hitEffectPrefab, hitPoint);
+            }
+
+            if (isAlive)
+            {
+                animator?.SetTrigger(hitTriggerHash);
+            }
+            else
+            {
+                stateMachine.ChangeState<DeadState>();
+            }
         }
-    }
 
-    public Transform SearchEnemy()
-    {
-        return target;
-    }
+        #endregion IDamagable interfaces
 
-    public Transform FindNextWayPoint()
-    {
-        wayPointTarget = null;
-        if(waypoints.Length > 0)
+        #region IAttackable Interfaces
+
+        public GameObject hitEffectPrefab = null;
+
+        [SerializeField]
+        private List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
+
+        public AttackBehaviour CurrentAttackBehaviour
         {
-            wayPointTarget = waypoints[wayPointIndex];
+            get;
+            private set;
         }
 
-        wayPointIndex = (wayPointIndex + 1) % waypoints.Length;  //cycling
-        return wayPointTarget;
+        public void OnExecuteAttack(int attackIndex)
+        {
+
+        }
+
+        #endregion IAttackable Interfaces
     }
-
-#endregion Other Methods
-
-    
-    
-}

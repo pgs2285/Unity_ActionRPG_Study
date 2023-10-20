@@ -10,7 +10,7 @@ public abstract class AttackBehaviour : MonoBehaviour
     #endif //unity editor
     public int animationIndex;
     public int priority;    // 2개의 공격이 있다고 가정해보았을때 둘다 쿨타임이 돌았다면 어떠한 공격을 우선으로 사용할 것인가.
-    public int damage = 10f;
+    public float damage = 10f;
     public float range = 3.0f;
     
     [SerializeField]
@@ -19,6 +19,7 @@ public abstract class AttackBehaviour : MonoBehaviour
 
     public GameObject effectPrefab;
     [HideInInspector] public LayerMask targetMask;
+    [HideInInspector] public bool isAvailable;
     #endregion Variables
     
     // Start is called before the first frame update
@@ -33,6 +34,11 @@ public abstract class AttackBehaviour : MonoBehaviour
         if (calcCoolTime < coolTime)
         {
             calcCoolTime += Time.deltaTime;
+            isAvailable = false;
+        }else if(calcCoolTime >= coolTime)
+        {
+            isAvailable = true;
+            calcCoolTime = 0.0f;
         }
     }
 
