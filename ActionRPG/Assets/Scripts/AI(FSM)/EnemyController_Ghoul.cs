@@ -1,23 +1,34 @@
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
-using UnityEditor;
 using UnityEngine;
 
-public class EnemyController_Ghoul : MonoBehaviour
+public class EnemyController_Ghoul : MonoBehaviour, IAttackable, IDamageable
 {
     #region Variables
 
     public bool isPatrol;
     protected StateMachine_New<EnemyController_Ghoul> stateMachine;
     public StateMachine_New<EnemyController_Ghoul> StateMachine => stateMachine;
+    
     public float AttackRange;
     private FieldOfView fov;
     public Transform target => fov?.NearestTarget;
     public Transform[] waypoints;
     [HideInInspector] public Transform wayPointTarget;
     private int wayPointIndex;
+    public Transform ProjoctileTransform;
+    public Transform hitTransform;
+    [SerializeField] private List<AttackBehaviour> attackBehaviours = new List<AttackBehaviour>();
+    public LayerMask TargetMask;
+    public int maxHealth;
+    public int health
+    {
+        get;
+        private set;
+    }
 
+    private Animator animator;
+    private int hitTriggerHash = Animator.StringToHash("Hit");
+    
     #endregion Variables
 
     #region Unity Methods
@@ -30,13 +41,18 @@ public class EnemyController_Ghoul : MonoBehaviour
         IdleState idleState = new IdleState();
         idleState.isPatrol = true;
         stateMachine.AddState(new IdleState());
+        stateMachine.AddState(new DeadState());
 
         fov = GetComponent<FieldOfView>();
+        InitAttackBehaviours();
+        health = maxHealth;
+        animator = GetComponent<Animator>();
 
     }
 
     private void Update()
     {
+        CheckAttackBehaviour();
         stateMachine.Update(Time.deltaTime);
     }
 
@@ -79,6 +95,81 @@ public class EnemyController_Ghoul : MonoBehaviour
 
 #endregion Other Methods
 
+    #region IAttackable Interface
+
+    public AttackBehaviour CurrentAttackBehaviour
+    {
+        get;
+        private set;
+    }
+
+    public void OnExecuteAttack(int attackIndex)
+    {
+        if (CurrentAttackBehaviour != null && target != null)
+        {
+            CurrentAttackBehaviour.ExecuteAttack(target.gameObject, ProjoctileTransform);
+        }
+    }
+    #endregion IAttackable Interface
+
+    #region IDamageable Interface
+
+    public bool isAlive => health > 0;
+
+    public void takeDamage(int damage, GameObject hitEffectPrefab)
+    {
+        if (!isAlive) return;
+        health -= damage;
+        if (hitEffectPrefab)
+        {
+            Instantiate(hitEffectPrefab, hitTransform.position, Quaternion.identity);
+        }
+
+        if (isAlive)
+        {
+            animator?.SetTrigger(hitTriggerHash);
+        }
+        else
+        {
+            stateMachine.ChangeState<DeadState>();
+        }
+    }
+    
+    #endregion IDamageable Interface
+    
+    #region Helper Methods
+
+    private void InitAttackBehaviours()
+    {
+        foreach(AttackBehaviour behaviour in attackBehaviours)
+        {
+            if (CurrentAttackBehaviour != null)
+            {
+                CurrentAttackBehaviour = behaviour;
+            }
+
+            behaviour.targetMask = TargetMask;
+        }
+    }
+
+    private void CheckAttackBehaviour()
+    {
+        if (CurrentAttackBehaviour != null || !CurrentAttackBehaviour.isAvailable)
+        {
+            CurrentAttackBehaviour = null;
+            foreach(AttackBehaviour behaviour in attackBehaviours)
+            {
+                if (behaviour.isAvailable)
+                {
+                    if ((CurrentAttackBehaviour == null) || (CurrentAttackBehaviour.priority < behaviour.priority))
+                    {
+                        CurrentAttackBehaviour = behaviour;
+                    }
+                }
+            }
+        }
+    }
+    #endregion Helper Methods
     
     
 }
