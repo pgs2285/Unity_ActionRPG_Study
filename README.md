@@ -29,6 +29,9 @@
     - [6. Terrain System](#6-terrain-system)
     - [7. Navigation](#7-navigation)
     - [8. GetComponent에 대한 오해(나만...?)](#8-getcomponent에-대한-오해나만)
+    - [9. delegate](#9-delegate)
+    - [10. rigidbody.position VS transform.position](#10-rigidbodyposition-vs-transformposition)
+    - [11. ContactPont](#11-contactpoint)
 
 # Unity_ActionRPG
 
@@ -813,4 +816,30 @@ void Start(){
 }
 ```  
 와 같은 상황이라면, 나중에는 chain만 호출해주면 += 해준 함수를 전부실행시킨다.  
+
+#### 10. rigidbody.position vs transform.position  
+
+Rigibody의 위치를 ​​변경하면 다음 물리 시뮬레이션 단계 후에 변환이 업데이트 되며 이는 transform.position보다 빠르다.  
+
+*transform.position 을 사용할 경우*
+- 오브젝트의 위치가 순간이동
+- 순간이동됨과 동시에 연결된 모든 콜라이더들이 리지드바디의 위치를 다시 계산하므로 퍼포먼스가 저하된다.
+
+*rigidbody.position 을 사용할 경우*
+- '다음 물리 시뮬레이션 단계' 이후에 오브젝트의 위치가 순간이동된다
+- 이미 시뮬레이션 계산이 이루어졌기 때문에 더 나은 속도와 퍼포먼스를 보여준다.
   
+  
+#### 11. ContactPoint  
+보통 Unity2D만 하던 나에겐 좀 신기한 컴포넌트였다. 쉽게말하면 충돌지점을 배열 형태로 저장하는 것이다.  
+제공하는 요소가 생각보다 유용해서 따로 항목을 정리해 보았다. 제공하는 컴포넌트 변수는 [ContactPoint](https://docs.unity3d.com/kr/530/ScriptReference/ContactPoint.html) < 이 링크와 같다.  
+유용히 사용했을때는 충돌객체에 충돌 이펙트를 생성해주고 싶을때 rotation값을 구할떄 잘 사용했다. 
+```csharp
+void OnCollisionEnter(Collision col)
+{
+... (생략)
+        ContactPoint contact = col.contacts[0]; // 처음 충돌한 지점을 저장한다.  
+        Quaternion contactRotation = Quaternion.FromToRotation(Vector3.up, contact.normal); // 충돌한 지점의 법선벡터를 구한다.
+}
+```  
+contact.normal은 충돌지점의 법선벡터를 반환해 주는데 이를 잘 활용하면 rotation값을 쉽게 구할 수 있다.
