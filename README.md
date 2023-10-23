@@ -29,6 +29,7 @@
     - [6. Terrain System](#6-terrain-system)
     - [7. Navigation](#7-navigation)
     - [8. GetComponent에 대한 오해(나만...?)](#8-getcomponent에-대한-오해나만)
+    - [9. delegate](#9-delegate)
 
 # Unity_ActionRPG
 
@@ -799,6 +800,18 @@ Terrain System은 산, 나무, 풀과같은 지형지물을 제작할때 많이 
 즉 해당 animator가 붙은 오브젝트에 EnemyController_Ghoul에 들어가는 것이다.  
 
 #### 9. delegate  
-c#의 강력한 기능중에 하나이나, 직접쓰기 전까지는 왜 사용하는지 모르는 것 들중 대표적인거 같다.  
+쉽게 말하자면, 함수들을 통합 실행 시켜주게 만드는 것이다. 예를들어 공격력을 올려주는 upgradePower와, 방어력을 올려주는 upgradeDefence가 있다고 생각해 보았을때, 레벨업 마다 매번 두가지 함수를 호출 하는것은 비효율 적일 것이다.  
+```csharp
+public delegate void ChainFunction(int value);
+ChainFunction chain;
 
+public void upgradePower(int value){~~~~}
+public void upgradeDefence(int value){~~~~}
+
+void Start(){
+    chain += upgradePower;
+    chain += upgradeDefence;
+}
+```  
+와 같은 상황이라면, 나중에는 chain만 호출해주면 += 해준 함수를 전부실행시킨다.  
   

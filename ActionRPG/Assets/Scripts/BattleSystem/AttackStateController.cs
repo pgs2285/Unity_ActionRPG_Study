@@ -21,6 +21,10 @@ public class AttackStateController : MonoBehaviour
         ExitAttackStateHandler = new OnExitAttackState(ExitAttackState);
     }
 
+    void Update()
+    {
+        Debug.Log(ExitAttackStateHandler);
+    }
     #region Helper Methods
 
     public void OnStartOfAttackState()
@@ -41,7 +45,7 @@ public class AttackStateController : MonoBehaviour
 
     private void ExitAttackState()
     {
-        
+
     }
 
     public void OnCheckAttackCollider(int attackIndex)

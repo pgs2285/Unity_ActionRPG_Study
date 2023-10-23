@@ -40,7 +40,7 @@ public class ControllerCharacter : MonoBehaviour
             RaycastHit hit;
             if(Physics.Raycast(ray, out hit, 100, groundLayerMask))      // physics.raycast 는 물체가 맞았으면 true를 리턴함
             {
-                Debug.Log("We hit " + hit.collider.name + " " + hit.point);
+                // Debug.Log("We hit " + hit.collider.name + " " + hit.point);
                 agent.SetDestination(hit.point);    // NavMeshAgent가 이동할 목적지를 설정한다.
             }
         }

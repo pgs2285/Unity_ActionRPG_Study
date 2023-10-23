@@ -28,6 +28,7 @@ public class AttackState : State<EnemyController>
 
     public override void OnEnter()
     {
+        Debug.Log("AttackState");
         if (attackable == null || attackable.CurrentAttackBehaviour == null)
         {// 만약 공격이 불가능한 객체라 attackable을 상속받지 않았거나, 스킬이 쿨타임이라 공격을 못하면.,
             stateMachine.ChangeState<IdleState>();
