@@ -8,7 +8,7 @@ public abstract class EnemyController : MonoBehaviour
 {
     #region Variables
     public StateMachine_New<EnemyController> stateMachine;
-    public virtual float AttackRange => 3.0f;
+    public virtual float AttackRange => 6.0f;
 
     protected NavMeshAgent agent;
     protected Animator animator;

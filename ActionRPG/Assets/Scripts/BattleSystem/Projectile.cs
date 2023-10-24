@@ -17,13 +17,14 @@ public class Projectile : MonoBehaviour
 
     private bool collided;                  // 적에게 적중했나 여부
     private Rigidbody rb;
-    [HideInInspector] private AttackBehaviour attackBehaviour;  // 쿨타임, 데미지 요소를 불러오기위해 AttackBehaviour component 저장.
+    [HideInInspector] public AttackBehaviour attackBehaviour;  // 쿨타임, 데미지 요소를 불러오기위해 AttackBehaviour component 저장.
     [HideInInspector] public GameObject owner;  // 발사체를 발사한 객체를 저장하기 위해 사용.
     [HideInInspector] public GameObject target;  // 발사체가 명중한 객체를 저장하기 위해 사용.
 #endregion Variables
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
         if (target)
         {
             Vector3 dest = target.transform.position;
@@ -71,7 +72,7 @@ public class Projectile : MonoBehaviour
     {
         if (speed != 0 && rb != null)
         {
-            rb.position = (transform.position) * (speed * Time.deltaTime);
+            rb.position += (transform.forward) * (speed * Time.deltaTime);
         }
     }
 
@@ -92,6 +93,7 @@ public class Projectile : MonoBehaviour
         rb.isKinematic = true;  // 물리엔진을 끈다.
         
         ContactPoint contact = col.contacts[0]; // 처음 충돌한 지점을 저장한다.  
+        Debug.Log(" projectile 충돌 : "+contact);
         Quaternion contactRotation = Quaternion.FromToRotation(Vector3.up, contact.normal); // 충돌한 지점의 법선벡터를 구한다.
         // Quaternion : 회전을 표현하는 클래스. FromToRotation : 두 벡터 사이의 회전을 구한다.
         // contact.normal 은 충돌한 지점의 법선벡터를 리턴한다.
@@ -100,7 +102,50 @@ public class Projectile : MonoBehaviour
         if (hitEffect)
         {
             GameObject hitVFX = Instantiate(hitEffect, contactPoint, contactRotation); // 충돌 이펙트를 생성한다.
+            ParticleSystem particleSystem = hitVFX.GetComponent<ParticleSystem>();
+            if(particleSystem)
+            {
+                Destroy(hitVFX, particleSystem.main.duration);
+            }
+            else
+            {// particle system이 자식에 있을때를 방지 
+                ParticleSystem childParticleSystem = hitVFX.transform.GetChild(0).gameObject.GetComponent<ParticleSystem>();
+                if(childParticleSystem)
+                {
+                    Destroy(hitVFX, childParticleSystem.main.duration);
+                }
+            }
         }
 
+        IDamageable damageable = col.gameObject.GetComponent<IDamageable>();
+        if(damageable != null)
+        {
+            damageable.takeDamage(attackBehaviour?.damage ?? 0, null); // null 조건부 연산자. attackBehaviour가 null이면 0을 리턴한다.
+        }
+        StartCoroutine(DestroyParticle(0.5f)); // 0.5초 뒤에 파티클을 제거한다.
+    }
+
+    public IEnumerator DestroyParticle(float waitTime)
+    {
+        if(transform.childCount > 0 && waitTime > 0)
+        {
+            List<Transform> childs = new List<Transform>();
+            foreach (Transform child in transform)
+            {
+                childs.Add(child);
+            }
+            
+            while(transform.GetChild(0).localScale.x > 0)
+            {
+                yield return new WaitForSeconds(0.01f);
+                foreach (Transform child in childs)
+                {
+                    child.localScale -= new Vector3(0.01f, 0.01f, 0.01f);
+                }
+            }
+        }
+
+        yield return new WaitForSeconds(waitTime);
+        Destroy(gameObject);
     }
 }

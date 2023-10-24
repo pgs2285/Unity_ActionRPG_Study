@@ -23,7 +23,7 @@ public class AttackStateController : MonoBehaviour
 
     void Update()
     {
-        Debug.Log(ExitAttackStateHandler);
+        // Debug.Log(ExitAttackStateHandler);
     }
     #region Helper Methods
 

@@ -24,7 +24,7 @@ public class IdleState : State<EnemyController>
     }
 
     public override void OnEnter(){
-        Debug.Log("IdleState");
+        // Debug.Log("IdleState");
         animator?.SetBool(hasMove, false); // ?. 는 null이 아닐때만 실행해준다.
         // animator?.SetFloat(hasMoveSpeed, 0.0f);
         controller?.Move(Vector3.zero);

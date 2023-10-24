@@ -8,11 +8,11 @@ using UnityEngine;
         [SerializeField]
         public Transform hitPoint;
 
-        public Transform[] waypoints;
 
         public float maxHealth => 100f;
         private float health;
 
+        public override float AttackRange => CurrentAttackBehaviour?.range ?? 6.0f;
         private int hitTriggerHash = Animator.StringToHash("HitTrigger");
         private int isAliveHash = Animator.StringToHash("IsAlive");
         // public bool isAvailableAttack = true;
@@ -54,6 +54,12 @@ using UnityEngine;
 
         }
 
+        protected override void Update()
+        {
+            base.Update();
+
+            CheckAttackBehaviour();
+        }
 
         #endregion Unity Methods
 
@@ -107,9 +113,12 @@ using UnityEngine;
 
         public void OnExecuteAttack(int attackIndex)
         {
+            Debug.Log("공격 전단계데스");
         if(CurrentAttackBehaviour != null)
             {
+                Debug.Log("공격");
                 CurrentAttackBehaviour.ExecuteAttack(Target.gameObject, hitPoint);
+                                CurrentAttackBehaviour = null;
             }
             
         }
@@ -131,7 +140,7 @@ using UnityEngine;
         {
             if (CurrentAttackBehaviour == null || !CurrentAttackBehaviour.isAvailable)
             {
-                CurrentAttackBehaviour = null;
+
 
                 foreach (AttackBehaviour behaviour in attackBehaviours)
                 {
@@ -139,7 +148,9 @@ using UnityEngine;
                     {
                         if ((CurrentAttackBehaviour == null) || (CurrentAttackBehaviour.priority < behaviour.priority))
                         {
+
                             CurrentAttackBehaviour = behaviour;
+  
                         }
                     }
                 }
