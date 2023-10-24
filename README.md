@@ -14,7 +14,8 @@
         -[4-1.FOM](#1-1-fsmfinite-state-machine)  
         -[4-2.Behaviour Tree 이론](#1-2-behaviour-model)  
         -[4-3.FOV(FieldOfView) 시야 구현하기](#1-3-시야field-of-view-구현하기)  
-        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)  
+        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)
+    - [5. 전투시스템을 구현해보자(ENEMY)](#5-전투시스템을-구현해보자-enemy)
    		
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
@@ -644,7 +645,7 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846a
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
 ![FOV_FINAL](./githubImage/FOV_FINAL.gif)   
 
-### 5. 전투시스템을 구현해보자.
+### 5. 전투시스템을 구현해보자 enemy.
 먼저 인터페이스들을 구현해 줄것이다.  
 > 기본적으로 유니티는 다중상속을 지원하진 않지만, 인터페이스를 통해 구현해야할 요소들을 받을순 있다.  
 > IAttackable과 IDamageable을 구현할것인데 만약 적이 대미지만 입을수 있는 상태이고, 공격을 못한다면 IDamageable만 구현하는등 유연하게 사용할 수 있어, 번거롭지만 나눠서 구현한다.  
