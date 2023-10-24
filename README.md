@@ -14,7 +14,8 @@
         -[4-1.FOM](#1-1-fsmfinite-state-machine)  
         -[4-2.Behaviour Tree 이론](#1-2-behaviour-model)  
         -[4-3.FOV(FieldOfView) 시야 구현하기](#1-3-시야field-of-view-구현하기)  
-        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)  
+        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)
+    - [5. 전투시스템을 구현해보자(ENEMY)](#5-전투시스템을-구현해보자-enemy)
    		
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
@@ -644,12 +645,47 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846a
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
 ![FOV_FINAL](./githubImage/FOV_FINAL.gif)   
 
-### 5. 전투시스템을 구현해보자.
+### 5. 전투시스템을 구현해보자 enemy.
 먼저 인터페이스들을 구현해 줄것이다.  
 > 기본적으로 유니티는 다중상속을 지원하진 않지만, 인터페이스를 통해 구현해야할 요소들을 받을순 있다.  
 > IAttackable과 IDamageable을 구현할것인데 만약 적이 대미지만 입을수 있는 상태이고, 공격을 못한다면 IDamageable만 구현하는등 유연하게 사용할 수 있어, 번거롭지만 나눠서 구현한다.  
 
+먼저 공격의 기본이되는 스크립트들부터 살펴보자.  
 
+*IAttackable*  
+https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4466065d8/ActionRPG/Assets/Scripts/BattleSystem/IAttackable.cs#L5-L16  
+
+*IDamageable*
+https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4466065d8/ActionRPG/Assets/Scripts/BattleSystem/IDamageable.cs#L5-L16  
+
+
+앞으로 생성될 몬스터들은 다음과 같은 인터페이스들을 상속받는다. 여기서 IAttackable 과 IDamageable은 Interface로 구현되어 있어, 상속하는 객체들은 이것들을 구체화 시켜주어야 한다.  
+예시중 하나가 아래 코드이다. 이 EnemyController_Ghoul.cs는 공격할 수 있는 객체임과 동시에, 대미지를 입을수 있으므로 두가지 모두 상속받는다.  
+https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4466065d8/ActionRPG/Assets/Scripts/AI(FSM)/EnemyController_Ghoul.cs#L5-L173  
+코드를 읽어보면, Interface들을 상속받은후 구현하고 AttackBehaviour리스트를 볼수 있는데, 이 구성은 아래 코드와 같다.  
+
+*AttackBehaviour*
+https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4466065d8/ActionRPG/Assets/Scripts/BattleSystem/AttackBehaviour.cs#L5-L47   
+여기에는 애니메이션 번호, 대미지, 쿨타임,범위 등 공격에 필요한 변수들이 들어있고, 추상클래스 이므로 추후 상속후 사용해주면 된다.
+
+이제 묶어서 설명해보자면, OnExecuteAttack을 애니메이션 트리거로 실행 시켜주면, 현재 공격단계 CurrentAttackBehaviour에 등록된 공격을 실행한다. SerializeField로 구성된 AttackBehaviours 은 아래 이미지와 같이 구현된 공격을 넣어준다.  
+![AttackBehaviour](./githubImage/AttackBehaviour.png)  
+여기서 Attack Behaviour_Melee, Attack Behaviour_Projectile은 각각 근거리, 원거리 공격을 구현한 것인데 관심있으면 *Assets/Scripts/BattleSystem* 에서 찾아보고 여기서 간단히 설명하자면 이는 AttackBehaviour을 상속해 만들어준 스크립트 들이다.  
+
+여기까지가 간단한 적 스크립트였고, 이제 hpbar을 구현해보자. hpbar는 화면이 어디에있든 각도에 상관없이 보여야 하므로, Billboards방식으로 구현해야한다. 그러기 위해서  
+```csharp
+    private void LateUpdate()
+    {
+        Vector3 targetPos = transform.position + referenceCamera.transform.rotation * (reverseFace ? Vector3.forward : Vector3.back); 
+        // 현재 위치에, 카메라의 회전값을 곱해준다.(좌우 대칭여부) 이때, reverseFace 가 true라면 Vector3.forward를 곱해주고, false라면 Vector3.back을 곱해준다.
+        
+        Vector3 targetOrientation = referenceCamera.transform.rotation * GetAxis(axis); // 카메라의 회전값을 곱해준다. 이때, axis에 따라 다른 축을 곱해준다.
+        transform.LookAt(targetPos, targetOrientation); // targetPos를 바라보고, targetOrientation을 up벡터로 설정.
+    }
+```  
+스크립트를 생성후 위와같은 형태로 구성해 주어 Canvas안에 넣어주었다. ( 이 Canvas(world space)는 Enemy의 자식오브젝트로 넣어줌)  
+간단한 설명은 얼추 마무리된거 같고 결과는 다음과 같다.  
+![Battle](./githubImage/BattleResult.gif)  
 
 ## 공부내용.
 

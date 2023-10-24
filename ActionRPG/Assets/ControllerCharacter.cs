@@ -19,6 +19,7 @@ public class ControllerCharacter : MonoBehaviour
     [SerializeField]
     private Animator animator;
     readonly int moveHash = Animator.StringToHash("Move");
+    public TargetPicker targetPicker;
 
     #endregion Variables
 
@@ -42,6 +43,7 @@ public class ControllerCharacter : MonoBehaviour
             {
                 // Debug.Log("We hit " + hit.collider.name + " " + hit.point);
                 agent.SetDestination(hit.point);    // NavMeshAgent가 이동할 목적지를 설정한다.
+                targetPicker.SetPosition(hit);      // TargetPicker의 위치를 설정한다.
             }
         }
 
