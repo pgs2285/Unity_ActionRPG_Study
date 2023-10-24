@@ -17,6 +17,8 @@ using UnityEngine;
         private int isAliveHash = Animator.StringToHash("IsAlive");
         // public bool isAvailableAttack = true;
 
+        [SerializeField] private NPCBattleUI _npcBattleUI;
+
         #endregion Variables
 
         #region Proeprties
@@ -50,6 +52,14 @@ using UnityEngine;
             stateMachine.AddState(new DeadState());
 
             health = maxHealth;
+
+            if (_npcBattleUI)
+            {
+                _npcBattleUI.MinimumHP = 0.0f;
+                _npcBattleUI.MaximumHP = maxHealth;
+                _npcBattleUI.Value = health;
+            }
+            
             InitAttackBehaviour();
 
         }
@@ -62,9 +72,6 @@ using UnityEngine;
         }
 
         #endregion Unity Methods
-
-        #region Helper Methods
-        #endregion Helper Methods
 
         #region IDamagable interfaces
 
@@ -79,6 +86,11 @@ using UnityEngine;
 
             health -= damage;
 
+            if (_npcBattleUI)
+            {
+                _npcBattleUI.Value = health;
+                
+            }
 
 
             if (hitEffectPrefab)
