@@ -7,6 +7,7 @@ using UnityEngine;
 public class ItemDatabase : ScriptableObject
 {
 
+   
     public ItemObject[] ItemObjects;
 
     public void OnValidate()
