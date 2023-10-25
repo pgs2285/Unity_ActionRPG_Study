@@ -14,7 +14,9 @@
         -[4-1.FOM](#1-1-fsmfinite-state-machine)  
         -[4-2.Behaviour Tree 이론](#1-2-behaviour-model)  
         -[4-3.FOV(FieldOfView) 시야 구현하기](#1-3-시야field-of-view-구현하기)  
-        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)  
+        -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)
+    - [5. 전투시스템을 구현해보자(ENEMY)](#5-전투시스템을-구현해보자-enemy)
+    - [6. 아이템 인벤토리 구현해보자](#6-item-inventory-를-제작해보자)
    		
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
@@ -644,7 +646,7 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/357c5c16fc51f51d22564bb6b4ee846a
 결과는 아래와 같다. 적은 특정 구간을 배회하다가, 캐릭터를 발견하면 쫒아오고(공격), 시야에서 벗어나면 다시 Patrol상태로 돌아간다.  
 ![FOV_FINAL](./githubImage/FOV_FINAL.gif)   
 
-### 5. 전투시스템을 구현해보자.
+### 5. 전투시스템을 구현해보자 enemy.
 먼저 인터페이스들을 구현해 줄것이다.  
 > 기본적으로 유니티는 다중상속을 지원하진 않지만, 인터페이스를 통해 구현해야할 요소들을 받을순 있다.  
 > IAttackable과 IDamageable을 구현할것인데 만약 적이 대미지만 입을수 있는 상태이고, 공격을 못한다면 IDamageable만 구현하는등 유연하게 사용할 수 있어, 번거롭지만 나눠서 구현한다.  
@@ -685,6 +687,13 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4
 스크립트를 생성후 위와같은 형태로 구성해 주어 Canvas안에 넣어주었다. ( 이 Canvas(world space)는 Enemy의 자식오브젝트로 넣어줌)  
 간단한 설명은 얼추 마무리된거 같고 결과는 다음과 같다.  
 ![Battle](./githubImage/BattleResult.gif)  
+
+### 6. Item Inventory 를 제작해보자.  
+일단 앞서 사용할 구조는 다음 두장의 이미지와 같다
+![ItemInventory](./githubImage/InventoryStruct.png)
+![Item](./githubImage/ItemStruct.png)  
+
+
 
 ## 공부내용.
 
