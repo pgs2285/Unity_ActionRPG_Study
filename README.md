@@ -16,6 +16,7 @@
         -[4-3.FOV(FieldOfView) 시야 구현하기](#1-3-시야field-of-view-구현하기)  
         -[4-4.Patrol 상태, 기본이동상태 구현하기](#1-4-patrol-상태의-적-만들기확장)
     - [5. 전투시스템을 구현해보자(ENEMY)](#5-전투시스템을-구현해보자-enemy)
+    - [6. 아이템 인벤토리 구현해보자](#6-item-inventory-를-제작해보자)
    		
   - [공부내용.](#공부내용)
     - [1. 정적 오브젝트](#1-정적-오브젝트)
@@ -687,7 +688,7 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4
 간단한 설명은 얼추 마무리된거 같고 결과는 다음과 같다.  
 ![Battle](./githubImage/BattleResult.gif)  
 
-### Item Inventory 를 제작해보자.  
+### 6. Item Inventory 를 제작해보자.  
 일단 앞서 사용할 구조는 다음 두장의 이미지와 같다
 ![ItemInventory](./githubImage/InventoryStruct.png)
 ![Item](./githubImage/ItemStruct.png)  
