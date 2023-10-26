@@ -12,16 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5d9b6a43c7013d47b76965aa2526486, type: 3}
   m_Name: PlayerInventory
   m_EditorClassIdentifier: 
-  database: {fileID: 0}
+  database: {fileID: 11400000, guid: ba40ed0299c421043b5a35559a21ff52, type: 2}
   type: 0
   container:
     slots:
     - allowedItems: 
       item:
-        id: -1
-        name: 
-        buffs: []
-      amount: 0
+        id: 0
+        name: Helmet1
+        buffs:
+        - stat: 0
+          value: 1
+          min: 1
+          max: 1
+      amount: 1
     - allowedItems: 
       item:
         id: -1
@@ -54,10 +58,10 @@ MonoBehaviour:
       amount: 0
     - allowedItems: 
       item:
-        id: -1
-        name: 
+        id: 1
+        name: Pants
         buffs: []
-      amount: 0
+      amount: 1
     - allowedItems: 
       item:
         id: -1
