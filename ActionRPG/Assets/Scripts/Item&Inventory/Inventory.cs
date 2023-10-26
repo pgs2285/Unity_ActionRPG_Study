@@ -26,5 +26,6 @@ public class Inventory
     public bool isContain(int id)
     {
         return slots.FirstOrDefault(i => i.item.id == id) != null;  //FirstOrDefault : 조건에 맞는 첫번째 요소를 반환한다. 없으면 null을 반환한다. 
+        
     }
 }

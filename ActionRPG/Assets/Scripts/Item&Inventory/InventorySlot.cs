@@ -25,6 +25,7 @@ public class InventorySlot
         {
             return item.id >= 0 ? parent.database.ItemObjects[item.id] : null;
         }
+        
     }
     // => 는 람다식. 매개변수가 없어서 괄호가 없다.
     public InventorySlot() => UpdateSlot(new Item(), 0);
@@ -57,5 +58,6 @@ public class InventorySlot
         }
         return false;
     }
+    
 
 }
