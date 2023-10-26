@@ -23,7 +23,7 @@ public class InventorySlot
     {
         get
         {
-            return item.id >= 0 ? parent.database.itemObjects[item.id] : null;
+            return item.id >= 0 ? parent.database.ItemObjects[item.id] : null;
         }
         
     }
@@ -31,6 +31,7 @@ public class InventorySlot
     public InventorySlot() => UpdateSlot(new Item(), 0);
     public InventorySlot(Item item, int amout) => UpdateSlot(item, amout);
     public void RemoveItem() => UpdateSlot(new Item(), 0);
+    public void AddItem(Item item, int amount) => UpdateSlot(item, this.amount += amount);
     public void AddAmount(int value) => UpdateSlot(item, amount += value);
 
     public void UpdateSlot(Item item, int amount)    // 추후에 드래그엔 드롭등 상호작용할때 호출되는 코드
