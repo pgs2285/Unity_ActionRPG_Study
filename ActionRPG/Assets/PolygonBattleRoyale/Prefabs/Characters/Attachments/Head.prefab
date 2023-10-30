@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 33816480813794800}
   - component: {fileID: 64395800103911360}
   m_Layer: 0
-  m_Name: SM_Char_Attach_Helmet_02
+  m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
