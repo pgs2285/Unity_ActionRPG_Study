@@ -28,11 +28,12 @@ public abstract class InventoryUI : MonoBehaviour
         for (int i = 0; i < inventoryObject.Slots.Length; i++)
         {
             inventoryObject.Slots[i].parent = inventoryObject;
-            inventoryObject.Slots[i].OnPostUpdate += OnPostUpdate;  // icon괴 개수에 대한 UI를 갱신해준디..
+            inventoryObject.Slots[i].onPostUpdate += OnPostUpdate;  // icon괴 개수에 대한 UI를 갱신해준디..
         
         // Drag & Drop 이벤트가 어디서 발생했는지 알기 위해서
-         AddEvent(gameObject, EventTriggerType.PointerEnter, delegate { OnEnterInterface(gameObject);});   
-         AddEvent(gameObject, EventTriggerType.PointerExit, delegate { OnExitInterface(gameObject);});   
+            AddEvent(gameObject, EventTriggerType.PointerEnter, delegate { OnEnterInterface(gameObject);});   
+            AddEvent(gameObject, EventTriggerType.PointerExit, delegate { OnExitInterface(gameObject);});  
+        } 
         
     }
 
@@ -131,6 +132,15 @@ public abstract class InventoryUI : MonoBehaviour
 
     public void OnExitDrag(GameObject go)
     {
-        
+        Destroy(MouseData.tmpItemBeingDragged);
+
+        if(MouseData.interfaceMouseIsOver == null)
+        {
+            slotsUI[go].RemoveItem();
+        }else if(MouseData.slotHoveredOver)
+        {
+            InventorySlot mouseHoverSlotData = MouseData.interfaceMouseIsOver.slotsUI[MouseData.slotHoveredOver];
+            inventoryObject.SwapItems(slotsUI[go], mouseHoverSlotData);
+        }
     }
 }

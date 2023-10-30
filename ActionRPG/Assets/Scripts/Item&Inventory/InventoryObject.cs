@@ -43,6 +43,7 @@ public class InventoryObject : ScriptableObject
         }
 
         InventorySlot slot = FindItemInInventory(item);
+        Debug.Log(item.id);
         if(!database.ItemObjects[item.id].stackable || slot == null)    // 아이템이 겹쳐지지 않거나 슬롯에 없다면
         {
             GetEmptySlot().AddItem(item, amount);
@@ -77,5 +78,9 @@ public class InventoryObject : ScriptableObject
             b.UpdateSlot(a.item, a.amount);
             a.UpdateSlot(tmp.item, tmp.amount);
         }
+    }
+    public void Clear()
+    {
+        container.Clear();
     }
 }

@@ -1,0 +1,66 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c5d9b6a43c7013d47b76965aa2526486, type: 3}
+  m_Name: StaticInventory
+  m_EditorClassIdentifier: 
+  database: {fileID: 11400000, guid: ba40ed0299c421043b5a35559a21ff52, type: 2}
+  type: 1
+  container:
+    slots:
+    - allowedItems: 00000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0
+    - allowedItems: 01000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0
+    - allowedItems: 02000000
+      item:
+        id: 1
+        name: Pants
+        buffs: []
+      amount: 1
+    - allowedItems: 03000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0
+    - allowedItems: 04000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0
+    - allowedItems: 05000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0
+    - allowedItems: 06000000
+      item:
+        id: 2
+        name: Weapon
+        buffs: []
+      amount: 1
+    - allowedItems: 07000000
+      item:
+        id: -1
+        name: 
+        buffs: []
+      amount: 0

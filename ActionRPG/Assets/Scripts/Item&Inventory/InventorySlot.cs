@@ -23,6 +23,7 @@ public class InventorySlot
     {
         get
         {
+            Debug.Log(parent);
             return item.id >= 0 ? parent.database.ItemObjects[item.id] : null;
         }
         
@@ -48,11 +49,12 @@ public class InventorySlot
         {   // 이 조건을 만족하면 아이템이 비어있는것
             return true;
         }
-
+        Debug.Log("Enter");
         foreach (ItemType type in allowedItems)
         {
             if (itemObject.type == type)
             {
+                Debug.Log("true");
                 return true;
             }
         }

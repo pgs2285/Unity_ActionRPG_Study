@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf42af5c458774bdf9d8ab2ab8e45da3, type: 3}
+  m_Name: Pants
+  m_EditorClassIdentifier: 
+  type: 2
+  stackable: 0
+  icon: {fileID: 21300000, guid: 38236a82ff44aaa4b972248479d5f970, type: 3}
+  modelPrefab: {fileID: 1395447336697490, guid: 85622633d5d3be041b1046022b49ba23, type: 3}
+  data:
+    id: 1
+    name: 123
+    buffs: []
+  boneNames: []
+  description: 
