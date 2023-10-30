@@ -23,7 +23,6 @@ public class InventorySlot
     {
         get
         {
-            Debug.Log(parent);
             return item.id >= 0 ? parent.database.ItemObjects[item.id] : null;
         }
         
