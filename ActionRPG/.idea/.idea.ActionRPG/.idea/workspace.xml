@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4b24ed90-68ae-40ed-b57c-11aca134f475" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/Inventory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/Inventory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/InventorySlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/InventorySlot.cs" afterDir="false" />
-    </list>
+    <list default="true" id="4b24ed90-68ae-40ed-b57c-11aca134f475" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -122,7 +118,7 @@
       <workItem from="1697516010824" duration="388000" />
       <workItem from="1697516415264" duration="15754000" />
       <workItem from="1697762541905" duration="8700000" />
-      <workItem from="1698035334703" duration="19296000" />
+      <workItem from="1698035334703" duration="20058000" />
     </task>
     <servers />
   </component>
