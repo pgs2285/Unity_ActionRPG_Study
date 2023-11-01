@@ -6,15 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4b24ed90-68ae-40ed-b57c-11aca134f475" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.ActionRPG/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Map/Modular Castle/Assets/prefabs/helmet.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Map/Modular Castle/Assets/prefabs/helmet.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_01.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_01.fbx.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_02.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_02.fbx.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_03.fbx.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Models/Characters/SM_Char_Attach_Helmet_03.fbx.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Attachments/SM_Char_Attach_Helmet_01.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Attachments/SM_Char_Attach_Helmet_01.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Attachments/SM_Char_Attach_Helmet_02.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Attachments/SM_Char_Attach_Helmet_02.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Character_GhillieSuit_01.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/PolygonBattleRoyale/Prefabs/Characters/Character_GhillieSuit_01.prefab" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/mainScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/mainScene.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/InventorySlot.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Item&amp;Inventory/InventorySlot.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -132,7 +123,7 @@
       <workItem from="1697516010824" duration="388000" />
       <workItem from="1697516415264" duration="15754000" />
       <workItem from="1697762541905" duration="8700000" />
-      <workItem from="1698035334703" duration="29180000" />
+      <workItem from="1698035334703" duration="29777000" />
     </task>
     <servers />
   </component>
