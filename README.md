@@ -690,12 +690,6 @@ https://github.com/pgs2285/Unity_ActionRPG/blob/daeafd1633715126af3576be1acd23a4
 간단한 설명은 얼추 마무리된거 같고 결과는 다음과 같다.  
 ![Battle](./githubImage/BattleResult.gif)  
 
-### 6. Item Inventory 를 제작해보자.  
-일단 앞서 사용할 구조는 다음 두장의 이미지와 같다
-![ItemInventory](./githubImage/InventoryStruct.png)
-![Item](./githubImage/ItemStruct.png)  
-
-
 
 ## 공부내용.
 
